@@ -1,5 +1,5 @@
 import streamlit as st
-import cv2
+from opencv import cv2
 import numpy as np
 
 img_file_buffer = st.camera_input("Take a picture")
