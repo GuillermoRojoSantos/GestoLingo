@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-streamlit
-numpy
-opencv-python-headless
-=======
 opencv-python-headless
 streamlit
 numpy
->>>>>>> 675933ae43d0ddb0cf90eb14e1e1d8e3aab6ccd0
