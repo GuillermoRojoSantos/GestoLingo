@@ -62,7 +62,7 @@ class detectormanos():
                 if dibujarBox:  # Vamos a dibujar el cuadro
                     cv2.rectangle(frame,(xmin-20, ymin-20),(xmax+20,ymax+20),color_, 2)
         
-        return self.list, bbox, player
+        return self.lista, bbox, player
 
     # Función para detectar y dibujar los dedos arriba
     def dedosarriba(self):
