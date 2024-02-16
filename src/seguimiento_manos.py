@@ -1,7 +1,7 @@
 # Importación de librerias
 import math
 import cv2
-import mediapipe as mp        # Libreria que contiene el detector de Manos, gracias a la cual sacaremos la información de la mano
+import mediapipe.python as mp        # Libreria que contiene el detector de Manos, gracias a la cual sacaremos la información de la mano
 import time
 
 # Creamos la clase
