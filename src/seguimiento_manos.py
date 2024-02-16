@@ -1,7 +1,7 @@
 # Importación de librerias
 import math
 import cv2
-import mediapipe.python as mp        # Libreria que contiene el detector de Manos, gracias a la cual sacaremos la información de la mano
+import mediapipe as mp        # Libreria que contiene el detector de Manos, gracias a la cual sacaremos la información de la mano
 import time
 
 # Creamos la clase
@@ -20,50 +20,44 @@ class detectormanos():
         self.tip = [4,8,12,16,20]
 
     # Función para encontrar las manos
-    def encontrarmanos(self, frame, dibujar=True):      
+    def encontrarmanos(self, frame, dibujar = True ):
         imgcolor = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         self.resultados = self.manos.process(imgcolor)
 
         if self.resultados.multi_hand_landmarks:
             for mano in self.resultados.multi_hand_landmarks:
                 if dibujar:
-                    self.dibujo.draw_landmarks(frame, mano, self.mpmanos.HAND_CONNECTIONS) # Dibujamos las conexiones de los puntos
-
+                    self.dibujo.draw_landmarks(frame, mano, self.mpmanos.HAND_CONNECTIONS)  # Dibujamos las conexiones de los puntos
         return frame
     
     # Función para encontrar la posición
-    def encontrarposicion(self, frame, ManoNum=0, dibujarPuntos=True, dibujarBox=True, color_=[]):
+    def encontrarposicion(self, frame, ManoNum = 0, dibujarPuntos = True, dibujarBox=True, color_ = []):
         xlista = []
         ylista = []
         bbox = []
         player = 0
         self.lista = []
-        
         if self.resultados.multi_hand_landmarks:
             miMano = self.resultados.multi_hand_landmarks[ManoNum]
-            prueba = self.multi_hand_landmarks
+            prueba = self.resultados.multi_hand_landmarks
             player = len(prueba)
-        
             for id, lm in enumerate(miMano.landmark):
-                alto, ancho, c = frame.shape                # Se extraen las dimensiones de los FPSs
-                cx, cy = int(lm.x * ancho), int(lm.y, alto) # Converitmos la info en pixeles
+                alto, ancho, c = frame.shape  # Extraemos las dimensiones de los fps
+                cx, cy = int(lm.x * ancho), int(lm.y * alto)  # Convertimos la informacion en pixeles
                 xlista.append(cx)
                 ylista.append(cy)
-
-                self.lista.append([id,cx,cy])
-
+                self.lista.append([id, cx, cy])
                 if dibujarPuntos:
-                    cv2.circle(frame,(cx,cy),3,(0,0,0), cv2.FILLED)
-            
-                xmin,xmax = min(xlista), max(xlista)
-                ymin,ymax = min(ylista), max(ylista)
+                    cv2.circle(frame,(cx, cy), 3, (0, 0, 0), cv2.FILLED)  # Dibujamos un circulo
 
-                bbox = xmin,xmax,ymin,ymax
-                if dibujarBox:  # Vamos a dibujar el cuadro
-                    cv2.rectangle(frame,(xmin-20, ymin-20),(xmax+20,ymax+20),color_, 2)
-        
+            xmin, xmax = min(xlista), max(xlista)
+            ymin, ymax = min(ylista), max(ylista)
+            bbox = xmin, ymin, xmax, ymax
+            if dibujarBox:
+                # Dibujamos cuadro
+                cv2.rectangle(frame,(xmin - 20, ymin - 20), (xmax + 20, ymax + 20), color_,2)
         return self.lista, bbox, player
-
+    
     # Función para detectar y dibujar los dedos arriba
     def dedosarriba(self):
         dedos = []

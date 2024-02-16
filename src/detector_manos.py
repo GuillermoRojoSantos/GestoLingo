@@ -17,7 +17,7 @@ if not os.path.exists(carpeta):
     os.makedirs(carpeta) # Se crea la carpeta
 
 # Lectura de la cámara
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)  # Hay que modificar este valor, el 0, en funcion de cuantas cámaras tengas en el equipo
 
 # Establecemos la resolución
 cap.set(3, 1280)
@@ -42,31 +42,30 @@ while True:
     # Si pilla la mano que queremos, le extraeremos los pixeles que conforman esa mano que realizan la seña que queremos detectar.
     if mano == 1:
         # Extramos la info del recuadro que la rodea
-        xmin,ymin,xmax,ymax = bbox
+        xmin, ymin, xmax, ymax = bbox
 
         # Vamos a darle un margen al rectangulo, ya que, sin él, el recuadro que capta la mano, deja fuera las puntas de varios dedos
         xmin = xmin-40 # Es -40 debido a que estamos hablando del lado izquierdo en el eje X, es decir, que se posicione aún más a la izq
         ymin = ymin-40
 
-        xmax=xmax+40    # Ahora hablamos del lado positivo del eje, así que, a mayor sea esta variable, más a la derecha se irá
-        ymax=ymax+40
+        xmax = xmax+40    # Ahora hablamos del lado positivo del eje, así que, a mayor sea esta variable, más a la derecha se irá
+        ymax = ymax+40
 
         # Realizamos un recorte de la mano (una instantanea/captura de imagen)
-        recorte = frame[ymin:ymax,xmax:xmax]
-
-        # Redimensionamiento de la imshow() del recorte(establecemso que sea 640x640 pixeles fijos y que interpolacion usa)
-        recorte = cv2.resize(recorte, (640,640), interpolation=cv2.INTERCUBIC)  # Este paso puede desactivarse en función de lo que veamos
-
-        # Almacenar nuestras imagenes
-        cv2.imwrite(carpeta + '/A_{}.jpg'.format(cont),recorte) # Este método permite guardar la imagen que haya en 'recorte'
-        #(direccion+nombre_archivo(la vez que sea), la imagen/recorte a almacenar)
-
-        # Cada vez que guardemos una imagen, se aumenta el contador 'cont'
-        cont +=1
+        recorte = frame[ymin:ymax, xmin:xmax]
 
         # Con esto podremos ver que hemos capturado(se debe de generar una segunda ventana que muestre lo que hay en el recuadro)
         cv2.imshow('Captura', recorte)      
 
+        # Redimensionamiento de la imshow() del recorte(establecemso que sea 640x640 pixeles fijos y que interpolacion usa)
+        recorte = cv2.resize(recorte, (640,640), interpolation=cv2.INTER_CUBIC)  # Este paso puede desactivarse en función de lo que veamos
+
+        # Almacenar nuestras imagenes
+        cv2.imwrite(carpeta + "/A_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
+            #(direccion+nombre_archivo(la vez que sea), la imagen/recorte a almacenar)
+
+        # Cada vez que guardemos una imagen, se aumenta el contador 'cont'
+        cont = cont+1
         
         # cv2.rectangle(frame,(xmin, ymin),(xmax,ymax),[0,255,0], 2) # Con este recuadro es con el que sacaremos los datos que usaremos en el entrenamiento
     
