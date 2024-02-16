@@ -27,7 +27,7 @@ class detectormanos():
         if self.resultados.multi_hand_landmarks:
             for mano in self.resultados.multi_hand_landmarks:
                 if dibujar:
-                    self.dibujo.draw_landsmarks(frame, mano, self.mpmanos.HAND_CONNECTIONS) # Dibujamos las conexiones de los puntos
+                    self.dibujo.draw_landmarks(frame, mano, self.mpmanos.HAND_CONNECTIONS) # Dibujamos las conexiones de los puntos
 
         return frame
     
