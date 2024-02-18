@@ -7,26 +7,27 @@ import time
 # Creamos la clase
 class detectormanos():
     def __init__(self, mode=False, maxManos=2, model_complexity=1, Confdeteccion=0.5, Confsegui=0.5):   # Método constructor
-        self.mode = mode    
-        self.maxManos = maxManos
-        self.compl = model_complexity
-        self.Confdeteccion = Confdeteccion
-        self.Confsegui = Confsegui
+        self.mode = mode                        # Parametro para indicar si se aplica o no el modo de seguimiento de manos, de base.
+        self.maxManos = maxManos                
+        self.compl = model_complexity           # Parametro para especificar la complejidad del modelo usado en la detección de las manos
+        self.Confdeteccion = Confdeteccion      # Umbral de confianza mínimo para la detección de las manos
+        self.Confsegui = Confsegui              # Umbral de confianza mínimo para el seguimiento de las manos
 
         # Creamos los objetos que detectarán las manos y las dibujaran
-        self.mpmanos = mp.solutions.hands
-        self.manos = self.mpmanos.Hands(self.mode, self.maxManos, self.compl, self.Confdeteccion, self.Confsegui)
-        self.dibujo = mp.solutions.drawing_utils
-        self.tip = [4,8,12,16,20]
+        self.mpmanos = mp.solutions.hands       # módulo que contiene la funcionabilidad para detectar las manos (libreria mediapipe)
+        self.manos = self.mpmanos.Hands(self.mode, self.maxManos, self.compl, self.Confdeteccion, self.Confsegui)   # objeto que se usará para detectar las manos en las imagenes procesadas
+        self.dibujo = mp.solutions.drawing_utils    # Con este modulo, se nos proporciona utiles para dibujar sobre imagenes
+        self.tip = [4,8,12,16,20]               # Estos numeros son los indices de los puntos de referencia de la punta de los dedos en una mano que haya sido detectada
+                                                # Se usan para identificar los dedos
 
     # Función para encontrar las manos
-    def encontrarmanos(self, frame, dibujar = True ):
-        imgcolor = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        self.resultados = self.manos.process(imgcolor)
+    def encontrarmanos(self, frame, dibujar = True):
+        imgcolor = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)   # Transforma el marco de BRG a RGB, debido a que Mediapipe lo requiere así
+        self.resultados = self.manos.process(imgcolor)      # Se procesa la imagen , mediante self.manos, y se detectan las manos en ella.  
 
-        if self.resultados.multi_hand_landmarks:
-            for mano in self.resultados.multi_hand_landmarks:
-                if dibujar:
+        if self.resultados.multi_hand_landmarks:                # Se verifican si se detectaron manos en la imagen.
+            for mano in self.resultados.multi_hand_landmarks:   # Se itera por cada mano detectada | self.resultados.multi_hand_landmarks es una lista que contiene los puntos caracteristicos de cada mano detectada
+                if dibujar:                                     
                     self.dibujo.draw_landmarks(frame, mano, self.mpmanos.HAND_CONNECTIONS)  # Dibujamos las conexiones de los puntos
         return frame
     
