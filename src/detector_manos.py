@@ -6,7 +6,8 @@ import os   # Esta libreria es para poder crear carpetas en Windows
 import seguimiento_manos as sm
 
 # Creamos la carpeta de la vocal A
-nombre = 'Letra_A'
+letra = input('Introduce la letra(En Mayusculas) a captar: ')
+nombre = f'Letra_{letra}'
 path='data'
 carpeta=path+'/'+nombre
 
@@ -61,7 +62,8 @@ while True:
         recorte = cv2.resize(recorte, (640,640), interpolation=cv2.INTER_CUBIC)  # Este paso puede desactivarse en función de lo que veamos
 
         # Almacenar nuestras imagenes
-        cv2.imwrite(carpeta + "/A_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
+        ima_letra = '/'+letra
+        cv2.imwrite(carpeta + ima_letra +"_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
             #(direccion+nombre_archivo(la vez que sea), la imagen/recorte a almacenar)
 
         # Cada vez que guardemos una imagen, se aumenta el contador 'cont'
@@ -73,7 +75,7 @@ while True:
     cv2.imshow('Detector de signos',frame)
 
     t = cv2.waitKey(1) # Leemos nuestro teclado, con un delay de 1 segundo
-    if t == 27 or cont==200: # la tecla 27 es Esc, para cerrar la cámara | limitamos a que sean 200 imagenes
+    if t == 27 or cont==100: # la tecla 27 es Esc, para cerrar la cámara | limitamos a que sean 100 imagenes
         break
 
 cap.release()
