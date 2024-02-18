@@ -31,4 +31,8 @@ Para guardar las imágenes y no tener que repetir el proceso cada vez que inicia
 
 Usando el modelo de Mediapipe de detección de manos, hacemos una predicción en cada frame de la posición de las manos, para ello utilizamos el siguiente código:
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/scraping.png' width = 800px>
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/marcar_mediapipe.png' width = 800px>
+
+Vamos a mostrar un ejemplo de como se vería un frame de la palabra `hola` con la detección del mediapipe.
+
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/hola_15_marked.png' width = 800px>
