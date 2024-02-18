@@ -19,12 +19,14 @@ Como anteriormente se mencionó, vamos a obtener los datos de la fuente  "[**Dic
 En primer lugar utilizaremos técnicas de Web Scraping desde Google Colab para la obtención de esos vídeos.
 Utilizaremos la librería `BeautifulSoup` y la librería `request` para la obtención de dichos datos
 
-<img>
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/scraping_dilse.png' width = 800px>
 
-Cuando obtengamos los vídeos de la web, es necesario dividirlo en frames, por lo que usaremos la siguiente función para dividir el vídeo y guardar esos frames en carpetas ***NOTA** Vamos a usar una sola palabra como ejemplo, pero se deberá de hacer después con todas las que queramos*
+Cuando obtengamos los vídeos de la web, es necesario dividirlo en frames, por lo que usaremos la siguiente función para dividir el vídeo y guardar esos frames en carpetas
 
-<img>
+(***NOTA:** Vamos a usar una sola palabra como ejemplo, pero se deberá de hacer después con todas las que queramos*)
+
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/dividir_frames.png' width = 800px>
 
 Para guardar las imágenes y no tener que repetir el proceso cada vez que iniciamos el colab, utilizamos el siguiente código
 
-<img>
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/descargar_directorio.png' width = 800px>
