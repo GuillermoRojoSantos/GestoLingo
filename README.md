@@ -33,6 +33,16 @@ Usando el modelo de Mediapipe de detección de manos, hacemos una predicción en
 
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/marcar_mediapipe.png' width = 800px>
 
+Con el modelo de Mediapipe que se ha mencionado antes, se ha creado una clase con funcionalidades dedicadas al seguimiento de manos (el archivo `src/seguimiento_manos.py`), en el cuál se establecen las funciones para ubicar una sola mano o ambas, detectar la posición de de estas, cuantos dedos hay levantados y la distancia que hay entre los dedos de cada mano.
+
 Vamos a mostrar un ejemplo de como se vería un frame de la palabra `hola` con la detección del mediapipe.
 
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/hola_15_marked.png' width = 800px>
+
+Por otra parte, tenemos la app en Python que hemos creado para grabar, frame a frame, los gestos para cada letra del abecedario. Este archivo es `src/detector_manos.py`. En esta app, se importa la clase del archivo `src/seguimiento_manos.py` para usar sus funciones. Al ejecutarla, te pedirá que letra vas a tomar, creará, si no existe, una carpeta llamada `data/Letra_{letra_introducida}`(la letra dependerá de la letra ingresada), que es donde la app tomará y guardará las fotos que tome a tu mano al momento de ejecutar la app.
+
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/captura_mano_con_dibujo.png' width = 800px>
+
+Al momento de guardar la imagenes, las guarda tal y como lo ves, así que normalmente, estas variables subrayadas, se dejan en `False` para dejar solo la mano sin lines o recuadros.
+
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/partes_a_alterar_dibujo.png' width = 800px>
