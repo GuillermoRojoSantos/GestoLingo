@@ -5,14 +5,19 @@ import os   # Esta libreria es para poder crear carpetas en Windows
 # Importamos la clase 
 import seguimiento_manos as sm
 
-# Creamos la carpeta de la vocal A
-letra = input('Introduce la letra(En Mayusculas) a captar: ')
+# Indicamos que letra vamos a escanear
+while True:
+    letra = input('Introduce la letra a captar: ').strip().upper()
+    if len(letra)==1 and letra.isalpha() and 'A'<=letra<='Z':
+        break
+    else:
+        print('Solo una sola letra en mayusculas del alfabeto Castellano')
 nombre = f'Letra_{letra}'
 path='data'
 carpeta=path+'/'+nombre
 
 
-# Si no está creada, se crea
+# Si no está creada la carpeta de esa letra, se crea
 if not os.path.exists(carpeta):
     print('Carpeta creada ', carpeta)
     os.makedirs(carpeta) # Se crea la carpeta
@@ -38,7 +43,7 @@ while True:
     frame = detector.encontrarmanos(frame, dibujar=True)   # Al ponerno en False, no se veran las lineas y puntos en tu mano
 
     # Extraemos la posición de una sola mano
-    lista1, bbox, mano = detector.encontrarposicion(frame, ManoNum=0, dibujarPuntos=True, dibujarBox=True, color_=[0,255,0]) # lista 1, la caja alrededor de la mano, y la mano en cuestión
+    lista1, bbox, mano = detector.encontrarposicion(frame, ManoNum=0, dibujarPuntos=False, dibujarBox=True, color_=[0,255,0]) # lista 1, la caja alrededor de la mano, y la mano en cuestión
     
     # Si pilla la mano que queremos, le extraeremos los pixeles que conforman esa mano que realizan la seña que queremos detectar.
     if mano == 1:
@@ -46,11 +51,11 @@ while True:
         xmin, ymin, xmax, ymax = bbox
 
         # Vamos a darle un margen al rectangulo, ya que, sin él, el recuadro que capta la mano, deja fuera las puntas de varios dedos
-        xmin = xmin-40 # Es -40 debido a que estamos hablando del lado izquierdo en el eje X, es decir, que se posicione aún más a la izq
-        ymin = ymin-40
+        xmin = xmin-50 # Es -40 debido a que estamos hablando del lado izquierdo en el eje X, es decir, que se posicione aún más a la izq
+        ymin = ymin-50
 
-        xmax = xmax+40    # Ahora hablamos del lado positivo del eje, así que, a mayor sea esta variable, más a la derecha se irá
-        ymax = ymax+40
+        xmax = xmax+50    # Ahora hablamos del lado positivo del eje, así que, a mayor sea esta variable, más a la derecha se irá
+        ymax = ymax+50
 
         # Realizamos un recorte de la mano (una instantanea/captura de imagen)
         recorte = frame[ymin:ymax, xmin:xmax]
@@ -59,7 +64,7 @@ while True:
         cv2.imshow('Captura', recorte)      
 
         # Redimensionamiento de la imshow() del recorte(establecemso que sea 640x640 pixeles fijos y que interpolacion usa)
-        recorte = cv2.resize(recorte, (640,640), interpolation=cv2.INTER_CUBIC)  # Este paso puede desactivarse en función de lo que veamos
+        # recorte = cv2.resize(recorte, (640,640), interpolation=cv2.INTER_CUBIC)  # Este paso puede desactivarse en función de lo que veamos
 
         # Almacenar nuestras imagenes
         ima_letra = '/'+letra
