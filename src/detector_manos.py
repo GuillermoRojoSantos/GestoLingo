@@ -40,10 +40,10 @@ while True:
     ret, frame = cap.read()
 
     # Vamos a extraer información de la mano
-    frame = detector.encontrarmanos(frame, dibujar=True)   # Al ponerno en False, no se veran las lineas y puntos en tu mano
+    frame = detector.encontrarmanos(frame, dibujar=False)   # Al ponerno en False, no se veran las lineas y puntos en tu mano
 
     # Extraemos la posición de una sola mano
-    lista1, bbox, mano = detector.encontrarposicion(frame, ManoNum=0, dibujarPuntos=False, dibujarBox=True, color_=[0,255,0]) # lista 1, la caja alrededor de la mano, y la mano en cuestión
+    lista1, bbox, mano = detector.encontrarposicion(frame, ManoNum=0, dibujarPuntos=False, dibujarBox=False, color_=[0,255,0]) # lista 1, la caja alrededor de la mano, y la mano en cuestión
     
     # Si pilla la mano que queremos, le extraeremos los pixeles que conforman esa mano que realizan la seña que queremos detectar.
     if mano == 1:
