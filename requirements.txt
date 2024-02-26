@@ -1,5 +1,5 @@
 imutils==0.5.4
-mediapipe==0.10.9
+mediapipe==0.10.10
 opencv-python==4.9.0.80
 pandas==2.2.0
 keras==3.0.5
