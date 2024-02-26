@@ -16,15 +16,25 @@ def get_model(output_lenght: int):  # 'output_lenght' representa la longitud de 
 
     model = Sequential()    # Crea el modelo secuencial de Keras
 
+    # Se añade la capa de entrada, con función de activación 'ReLU', configurada para devolver sentencias 
     model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(MAX_LENGTH_FRAMES, LENGTH_KEYPOINTS)))
+
+    # Capas intermedias
+    # Capas LSTM, con 128 neuronas, con la función de activación 'ReLU', configurada para devolver sentencias
     model.add(LSTM(128, return_sequences=True, activation='relu'))
+    # Capas LSTM, con 128 neuronas, con la función de activación 'ReLU', configurada para NO devolver sentencias
     model.add(LSTM(128, return_sequences=False, activation='relu'))
-    model.add(Dense(64, activation='relu'))
+
+    # Se añaden 4 capas densas conectadas con 64 neuronas, las 2 primeras, y 32 las dos ultimas, con la función de activación 'ReLU'
+    model.add(Dense(64, activation='relu')) 
     model.add(Dense(64, activation='relu'))
     model.add(Dense(32, activation='relu'))
     model.add(Dense(32, activation='relu'))
+
+    # Capa de salida, con el valor de 'output_lenght' como cantidad de neuronas, con la función de activación 'Softmax'
     model.add(Dense(output_lenght, activation='softmax'))
 
+    # Se compila el modelo con el optimizador 'Adam', la función de perdida 'binary_crossentropy' y la métrica de precisión
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
     return model

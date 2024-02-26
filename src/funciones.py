@@ -18,8 +18,10 @@ from mediapipe.python.solutions.drawing_utils import draw_landmarks, DrawingSpec
 
 def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convierte la imagen de formato BGR a formato RGB, ya que Mediapipe requiere este ultimo formato
+
     image.flags.writeable = False                   # Establece que la imagen sea solo de 'lectura', para evitar alteraciones cuando sean procesadas por Mediapipe
     results = model.process(image)                  # Se pasa la imagen procesada al modelo de Mediapipe para realizar la detección
+
     image.flags.writeable = True                    # Tras el proceso de detección, se vuelve a establecer la imagen para que sea de 'Escritura'
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  # Se vuelve a establecer el formato BRG a la imagen, el cuál es el formato usado por cv2
     return image, results                           # Devuelve la imagen procesada y los resultados de la detección
@@ -60,6 +62,7 @@ def draw_keypoints(image, results):
         DrawingSpec(color=(80, 110, 10), thickness=1, circle_radius=1),     # Con los 'DrawingSpec()' se especifica el color, el grosor y el radio de los circulos 
         DrawingSpec(color=(80, 256, 121), thickness=1, circle_radius=1),    # que representan a los keypoints
     )
+
     # En este caso, dibuja los keypoints de los landmarks de la pose, 'pose_landmarks'
     draw_landmarks(                                                         
         image,
@@ -68,6 +71,7 @@ def draw_keypoints(image, results):
         DrawingSpec(color=(80, 22, 10), thickness=2, circle_radius=4),
         DrawingSpec(color=(80, 44, 121), thickness=2, circle_radius=2),
     )
+
     # En este caso, dibuja los keypoints de los landmarks de la mano izquierda, 'left_hand_landmarks'
     draw_landmarks(                                                         
         image,
@@ -76,6 +80,7 @@ def draw_keypoints(image, results):
         DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
         DrawingSpec(color=(121, 44, 250), thickness=2, circle_radius=2),
     )
+
     # En este caso, dibuja los keypoints de los landmarks de la mano derecha, 'right_hand_landmarks'
     draw_landmarks(                                                         
         image,
@@ -88,7 +93,9 @@ def draw_keypoints(image, results):
 # Función para guardar los frames en el directorio de salida especificado, 'output_folder'
 def save_frames(frames, output_folder):
     for num_frame, frame in enumerate(frames):                           # Se itera sobre cada frame en la lista de frames, 'frames', con 'enumerate()', obteniendo su indice y frame
+        
         frame_path = os.path.join(output_folder, f"{num_frame + 1}.jpg") # Se construye una ruta completa para el frame actual mediante 'os.path.join()'
+
         cv2.imwrite(frame_path, cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)) # Guarda el frame como un archivo, sin antes convertirlo a BGRA para que cumpla con el formato establecido
 
 
@@ -98,14 +105,17 @@ def save_frames(frames, output_folder):
 # concatena estas coordenadas en un único vector y lo devuelve
 def extract_keypoints(results):
     # Se extraen las coordenadas x,y,z y la visibilidad de los keypoints de la pose, cada conjunto se almacena en un array de 1 dimensión, en caso de haber disponibles.
+
     # De no haber keypoints almecenados en 'results', se crea un array de ceros, con la forma correspondiente(33 keypoints * 4 valores en este caso) en su lugar
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
     # Lo mismo, pero con los keypoints de la cara
     face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
+
     # Lo mismo, pero con los keypoints de la mano izquierda
     lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
     # Lo mismo, pero con los keypoints de la mano derecha
     rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
+
     return np.concatenate([pose, face, lh, rh]) # Se concatenan todos los arrays de coordenadas en un solo vector y se devuelve este último como resultado de la función
 
 # Función mediante la que se extraen y concatenan los keypoints de cada imagen en una secuencia de keypoints.
@@ -113,8 +123,10 @@ def get_keypoints(model, path):
     kp_seq = np.array([])                               # Inicializa un array para almacenar la secuencia de keypoints
     for img_name in os.listdir(path):                       
         img_path = os.path.join(path, img_name)         # Se obtiene el nombre de la ruta completa
+
         frame = cv2.imread(img_path)                    # Se lee la imagen y se almacena en 'frame'
         _, results = mediapipe_detection(frame, model)  # Medainte la función 'mediapipe_detection()' se obtienen los resultados de la detección de keypoints
+        
         kp_frame = extract_keypoints(results)           # Se extraen los keypoints de la pose, cara y las manos de la imagen actual
         
         # Se agregan los keypoints actuales, si ya habia almacenados anteriormente, se concatenan, sino habia nada antes, se crear una nueva matriz con 'kp_frame'
