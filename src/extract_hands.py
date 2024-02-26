@@ -1,5 +1,7 @@
 import mediapipe as mp
 import cv2
+from mediapipe.python.solutions.holistic import Holistic
+
 import Utils as ut
 
 mp_hands = mp.solutions.hands
