@@ -40,7 +40,7 @@ while True:
     ret, frame = cap.read()
 
     # Vamos a extraer información de la mano
-    frame = detector.encontrarmanos(frame, dibujar=False)   # Al ponerno en False, no se veran las lineas y puntos en tu mano
+    frame = detector.encontrarmanos(frame, dibujar=True)   # Al ponerno en False, no se veran las lineas y puntos en tu mano
 
     # Extraemos la posición de una sola mano
     lista1, bbox, mano = detector.encontrarposicion(frame, ManoNum=0, dibujarPuntos=False, dibujarBox=False, color_=[0,255,0]) # lista 1, la caja alrededor de la mano, y la mano en cuestión
@@ -61,14 +61,14 @@ while True:
         recorte = frame[ymin:ymax, xmin:xmax]
 
         # Con esto podremos ver que hemos capturado(se debe de generar una segunda ventana que muestre lo que hay en el recuadro)
-        cv2.imshow('Captura', recorte)      
+        #cv2.imshow('Captura', recorte)      
 
         # Redimensionamiento de la imshow() del recorte(establecemso que sea 640x640 pixeles fijos y que interpolacion usa)
         # recorte = cv2.resize(recorte, (640,640), interpolation=cv2.INTER_CUBIC)  # Este paso puede desactivarse en función de lo que veamos
 
         # Almacenar nuestras imagenes
         ima_letra = '/'+letra
-        cv2.imwrite(carpeta + ima_letra +"_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
+        # cv2.imwrite(carpeta + ima_letra +"_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
             #(direccion+nombre_archivo(la vez que sea), la imagen/recorte a almacenar)
 
         # Cada vez que guardemos una imagen, se aumenta el contador 'cont'
