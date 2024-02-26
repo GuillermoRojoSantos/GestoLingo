@@ -1,5 +1,6 @@
 # -- Importación de librerias, módulos, funciones, variables y clases --
 import os
+import pandas as pd
 import cv2
 import numpy as np
 from mediapipe.python.solutions.holistic import Holistic
