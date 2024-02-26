@@ -6,7 +6,7 @@ import time
 
 # Creamos la clase
 class detectormanos():
-    def __init__(self, mode=False, maxManos=2, model_complexity=1, Confdeteccion=0.5, Confsegui=0.5):   # Método constructor
+    def __init__(self, mode=False, maxManos=2, model_complexity=1, Confdeteccion=0.8, Confsegui=0.9):   # Método constructor
         self.mode = mode                        # Parametro para indicar si se aplica o no el modo de seguimiento de manos, de base.
         self.maxManos = maxManos                
         self.compl = model_complexity           # Parametro para especificar la complejidad del modelo usado en la detección de las manos

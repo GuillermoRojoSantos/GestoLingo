@@ -40,7 +40,7 @@ def capture_samples(path, margin_frame=2, min_cant_frames=5):
         
         # Mientras el objeto de captura de video esté abierto, se ejecutará el siguiente código
         while video.isOpened():             
-            frame = video.read()[1]                                     # Se lee el frame que esté captando 'video'
+            frame = video.read()[1] # Se lee el frame que esté captando 'video'
 
             # Se procesa la imagen actual, guardando el frame con las detecciones superpuestas, 'image', y se almacena los resultados de la detección,  'results'
             image, results = mediapipe_detection(frame, holistic_model) 
@@ -74,3 +74,8 @@ def capture_samples(path, margin_frame=2, min_cant_frames=5):
 
         video.release()
         cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    word_name = "palabra"
+    word_path = os.path.join(ROOT_PATH, FRAME_ACTIONS_PATH, word_name)
+    capture_samples(word_path)

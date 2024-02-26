@@ -68,7 +68,7 @@ while True:
 
         # Almacenar nuestras imagenes
         ima_letra = '/'+letra
-        # cv2.imwrite(carpeta + ima_letra +"_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
+        cv2.imwrite(carpeta + ima_letra +"_{}.jpg".format(cont), recorte) # Este método permite guardar la imagen que haya en 'recorte'
             #(direccion+nombre_archivo(la vez que sea), la imagen/recorte a almacenar)
 
         # Cada vez que guardemos una imagen, se aumenta el contador 'cont'
