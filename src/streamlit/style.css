@@ -1,19 +1,37 @@
+/* Streamlit */
+[data-testid="stHeader"], [data-testid="StyledLinkIconContainer"] {
+    display: none;
+}
+[data-testid="stAppViewContainer"] {
+    background:white;
+}
+
+[data-testid="stAppViewBlockContainer"] {
+    padding: 0 !important;
+}
+
+/* [data-testid="stSidebar"][aria-expanded="true"] {
+    background-color: #598ae6;
+} */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f2f5fd; /* Azul claro para el fondo */
-    color: #333; /* Color de texto principal */
-    margin: 0;
+    background-color: #f2f5fd;
+    color: #333;
+    margin:5px;
     padding: 0;
     box-sizing: border-box;
+    width: 100%;
 }
 
 header {
-    background-color: #1a237e; /* Azul oscuro para la cabecera */
-    color: #fff; /* Texto blanco para la cabecera */
-    padding: 20px;
+    background-color: #275dc0;
+    color: #fff;
+    padding: 10px;
     text-align: center;
     position: relative;
-    height: 80px; /* Ajuste de altura para coincidir con el estilo anterior */
+    height: 80%;
+    width: 100%;
 }
 
 #logo-container {
@@ -21,18 +39,49 @@ header {
     top: 10px;
     right: 10px;
 }
+.logo-image {
+    width: 90px;
+    height: 90px;
+    margin: -10px;
+}
+
+
+.title-box {
+    color: black;
+    font-size: 25px; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.contenedor {
+    display: flex;
+    align-items: center;
+    margin: 5%;
+}
+
+/* Estilos para el área de texto */
+.texto {
+    flex: 1;
+    padding: 20px; 
+}
+
+/* Estilos para el área de la imagen */
+.imagen {
+    max-width: 100%; 
+    height: auto; 
+}
 
 #logo {
-    max-width: 80px; /* Ajusta el tamaño máximo de la imagen según sea necesario */
-    border-radius: 50%; /* Crea un contorno circular */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Agrega sombra */
+    max-width: 80px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
 #app-name {
-    margin-top: 10px; /* Ajusta el espacio entre la imagen y el nombre de la aplicación */
-    font-size: 36px; /* Tamaño de fuente más grande */
-    font-family: 'Verdana', sans-serif; /* Cambia el tipo de letra */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Agrega sombra al texto */
+    margin-top: 10px;
+    font-size: 36px; 
+    font-family: 'Verdana', sans-serif; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
 }
 
 main {
@@ -42,13 +91,19 @@ main {
 }
 
 h1 {
-    color: #D8D3D3; /* Cambia el color del título principal */
+    text-align: center;
 }
 
+h2 {
+    text-align: center;
+    color: white;
+    text-size-adjust: 10;
+}
 p {
     font-size: 18px;
+    margin-left: 15px;
     line-height: 1.6;
-    color: #333; /* Cambia el color del texto principal */
+    color: #333;
 }
 
 .features {
@@ -61,16 +116,16 @@ p {
     flex: 1;
     margin: 0 20px;
     padding: 20px;
-    background-color: #e3f2fd; /* Azul claro para los bloques de características */
+    background-color: #e3f2fd;
     border-radius: 10px;
 }
 
 footer {
-    background-color: #1a237e;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-    position: fixed;
+    background-color: #275dc0;
+    color: #fff; 
+    padding: 10px;
+    margin-top: 15%;
     bottom: 0;
+    text-align: center;
     width: 100%;
 }
