@@ -48,8 +48,6 @@ with mp_hands.Hands(
 
                 res_hand_landmarks = np.concatenate([left_hand,right_hand])
                 # Agregar filas al DataFrame
-                print({"n_sample":sample,"frame":int(re.findall("\d+",image)[0])+1,"keypoints":[res_hand_landmarks]})
-                # df.add({"n_sample":sample,"frame":int(re.findall("\d+",image)[0])+1,"keypoints":[res_hand_landmarks]})
                 df.loc[len(df.index)] = {"n_sample":int(re.findall("\d+",sample)[0]),"frame":int(re.findall("\d+",image)[0])+1,"keypoints":[res_hand_landmarks]}
 
                 print(df.head())
