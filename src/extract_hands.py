@@ -36,8 +36,8 @@ cap.set(4,720)
 
 with mp.solutions.hands.Hands(
     # Parametro para especificar la complejidad del modelo usado en la detección de las manos
-    model_complexity=0,
-    min_detection_confidence=0.7,
+    model_complexity=1,
+    min_detection_confidence=0.8,
     min_tracking_confidence=0.9
 ) as mp_hands:
     while True:
@@ -67,6 +67,13 @@ with mp.solutions.hands.Hands(
                     mp_drawing_styles.get_default_hand_landmarks_style(),
                     mp_drawing_styles.get_default_hand_connections_style()
                 )
+                wrist_x = hand_landmarks.landmark[0].x
+                if wrist_x > 0.5:
+                    # Mano izquierda
+                    print("Mano derecha")
+                else:
+                    # Mano derecha
+                    print("Mano izquierda")
                 # Save the frame in local folder
                 cv2.imwrite(f"{folder}/sample_{toma_cont}/{word}_{ima_cont}.jpg",cv2.cvtColor(frame,cv2.COLOR_BGR2RGB))
                 ima_cont +=1
