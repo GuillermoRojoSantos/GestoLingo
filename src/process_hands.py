@@ -59,7 +59,6 @@ with mp_hands.Hands(
                                              "keypoints": res_hand_landmarks}
                     f_counter += 1
 
-                    print(df.head())
             f_counter = 0
 
 df.to_hdf(f"../data/dataFrames/{lista}.h5", key="data", mode="w")
