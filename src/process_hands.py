@@ -28,29 +28,31 @@ with mp_hands.Hands(
                 result = hands.process(frame)
                 left_hand = []
                 right_hand = []
-                for hand_landmark in result.multi_hand_landmarks:
 
-                    wrist_x = hand_landmark.landmark[0].x
-                    # Comparar la coordenada x de la muñeca con un valor arbitrario para distinguir izquierda y derecha
-                    if wrist_x > 0.5:
-                        # Mano izquierda
-                        left_hand = np.array([[res.x, res.y, res.z] for res in hand_landmark.landmark]).flatten()
+                if result.multi_hand_landmarks != None:
+                    for hand_landmark in result.multi_hand_landmarks:
 
-                    else:
-                        # Mano derecha
-                        right_hand = np.array([[res.x,res.y,res.z] for res in hand_landmark.landmark]).flatten()
+                        wrist_x = hand_landmark.landmark[0].x
+                        # Comparar la coordenada x de la muñeca con un valor arbitrario para distinguir izquierda y derecha
+                        if wrist_x > 0.5:
+                            # Mano izquierda
+                            left_hand = np.array([[res.x, res.y, res.z] for res in hand_landmark.landmark]).flatten()
+
+                        else:
+                            # Mano derecha
+                            right_hand = np.array([[res.x,res.y,res.z] for res in hand_landmark.landmark]).flatten()
 
 
-                #si alguna mano está vacia, rellenar con 0
-                if len(left_hand)==0:
-                    left_hand = np.zeros(21*3)
-                elif len(right_hand)==0:
-                    right_hand = np.zeros((21*3))
+                    #si alguna mano está vacia, rellenar con 0
+                    if len(left_hand)==0:
+                        left_hand = np.zeros(21*3)
+                    elif len(right_hand)==0:
+                        right_hand = np.zeros((21*3))
 
-                res_hand_landmarks = np.concatenate([left_hand,right_hand])
-                # Agregar filas al DataFrame
-                df.loc[len(df.index)] = {"n_sample":int(re.findall("\d+",sample)[0]),"frame":int(re.findall("\d+",image)[0])+1,"keypoints":[res_hand_landmarks]}
+                    res_hand_landmarks = np.concatenate([left_hand,right_hand])
+                    # Agregar filas al DataFrame
+                    df.loc[len(df.index)] = {"n_sample":int(re.findall("\d+",sample)[0]),"frame":int(re.findall("\d+",image)[0])+1,"keypoints":[res_hand_landmarks]}
 
-                print(df.head())
+                    print(df.head())
 
 df.to_hdf(f"../data/dataFrames/{lista}.h5",key="data",mode="w")
