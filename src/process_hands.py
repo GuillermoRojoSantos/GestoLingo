@@ -15,7 +15,8 @@ if not os.path.exists("../data/dataFrames/"):
 
 with mp_hands.Hands(
     model_complexity=0,
-    min_detection_confidence=0.8
+    min_detection_confidence=0.2,
+    min_tracking_confidence=0.9
 ) as hands:
     for lista in os.listdir("../data/words/"):
         df = pd.DataFrame(columns=["n_sample","frame","keypoints"])
