@@ -4,4 +4,3 @@ opencv-python==4.9.0.80
 pandas==2.2.0
 keras==3.0.5
 streamlit==1.31.1
-protobuf
