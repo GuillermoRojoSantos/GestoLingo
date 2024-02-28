@@ -37,7 +37,7 @@ cap.set(4,720)
 with mp.solutions.hands.Hands(
     # Parametro para especificar la complejidad del modelo usado en la detección de las manos
     model_complexity=1,
-    min_detection_confidence=0.8,
+    min_detection_confidence=0.2,
     min_tracking_confidence=0.9
 ) as mp_hands:
     while True:
