@@ -1,12 +1,13 @@
 import mediapipe as mp
 import cv2
-import Utils as ut
+# import Utils as ut
 import os
 import re
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 ima_cont = 0
+sample_var = "sample_00"
 
 # Words' folders creation
 word = input('Ingrese la palabra a aprender: ')
@@ -37,7 +38,7 @@ cap.set(4,720)
 with mp.solutions.hands.Hands(
     # Parametro para especificar la complejidad del modelo usado en la detección de las manos
     model_complexity=1,
-    min_detection_confidence=0.8,
+    min_detection_confidence=0.2,
     min_tracking_confidence=0.9
 ) as mp_hands:
     while True:
@@ -55,9 +56,9 @@ with mp.solutions.hands.Hands(
         image = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
         if results.multi_hand_landmarks:
-            if not os.path.exists(f"{folder}/sample_{toma_cont}/"):
-                os.mkdir(f"{folder}/sample_{toma_cont}/")
-                print(f" Carpeta {folder}/sample_{toma_cont}/ creada")
+            if not os.path.exists(f"{folder}/{sample_var}{toma_cont}/"):
+                os.mkdir(f"{folder}/{sample_var}{toma_cont}/")
+                print(f" Carpeta {folder}/{sample_var}{toma_cont}/ creada")
 
             for hand_landmarks in results.multi_hand_landmarks:
                 mp_drawing.draw_landmarks(
@@ -75,7 +76,15 @@ with mp.solutions.hands.Hands(
                     # Mano derecha
                     print("Mano izquierda")
                 # Save the frame in local folder
-                cv2.imwrite(f"{folder}/sample_{toma_cont}/{word}_{ima_cont}.jpg",cv2.cvtColor(frame,cv2.COLOR_BGR2RGB))
+                if ima_cont<10:
+                    cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_00{ima_cont}.jpg",
+                                cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                elif ima_cont<100:
+                    cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_0{ima_cont}.jpg",
+                                cv2.cvtColor(frame,cv2.COLOR_BGR2RGB))
+                else:
+                    cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_{ima_cont}.jpg",
+                                cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
                 ima_cont +=1
 
 
@@ -86,6 +95,10 @@ with mp.solutions.hands.Hands(
             break
         elif cv2.waitKey(5) & 0xFF == ord('q'):
             toma_cont+=1
+            if toma_cont == 10:
+                sample_var = "sample_0"
+            elif toma_cont == 100:
+                sample_var = "sample_"
             print("me he sumado")
             ima_cont=0
 
