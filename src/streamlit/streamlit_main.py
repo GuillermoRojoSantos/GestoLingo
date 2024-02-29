@@ -1,6 +1,8 @@
 import streamlit as st
 import streamlit.components.v1 as com
 import base64
+import json
+
 
 # Configuración de la página
 st.set_page_config(
@@ -16,7 +18,7 @@ contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()
 
-
+# Código html para header y footer
 
 header = f'''
     <header>
@@ -27,22 +29,23 @@ header = f'''
     </header>
 '''
 
-body = f'''
+footer = f'''
         <footer>
             &copy; 2024 Gestolingo - Traductor de Lenguaje de Signos
         </footer>
     '''
 
-
-with open('./style.css') as css:
-            st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html = True)
-st.markdown(header, unsafe_allow_html=True)
-
-# Contenido para la Opción 2
+# Variables para elegir la cámara
 sin_puntos = 'width: 50%; height: 50%'
 con_puntos = 'display:none'
 
-    # Botón
+# Mostrar el código html y cargar la hoja de estilos (CSS)
+
+with open('./style.css') as css:
+    st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html = True)
+st.markdown(header, unsafe_allow_html=True)
+
+# Botón para elegir la cámara
 st.text("Para poder ver los puntos de su mano deberá de activar el siguiente sensor")
 on = st.toggle('Activar sensor')
 
@@ -52,29 +55,58 @@ if on:
 else:
     con_puntos = 'display:none'
     sin_puntos = 'width: 50%; height: 50%'
+
+# Variable para el código JavaScript para la ejecución de la cámara
+
 my_js = """
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
+var handPointsData = [];
+
 
 function onResults(results) {
+    // Guarda el estado actual del contexto del lienzo
     canvasCtx.save();
+
+    // Limpia el lienzo, borra todo el contenido existente
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+    // Dibuja la imagen resultante en el lienzo
     canvasCtx.drawImage(
         results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+    // Verifica si hay múltiples landmarks (puntos característicos) de manos en los resultados
     if (results.multiHandLandmarks) {
+        // Itera sobre cada conjunto de landmarks de mano
         for (const landmarks of results.multiHandLandmarks) {
+            // Dibuja conectores entre los landmarks de la mano
             drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
                             {color: '#00FF00', lineWidth: 5});
+
+            // Dibuja los landmarks de la mano
             drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+            if (results.multiHandLandmarks) {
+                const handPointsData = results.multiHandLandmarks[0].flat();  // Obtener todos los puntos de la mano como un array plano
+
+                // Arreglar este punto
+
+                //Streamlit.setComponentValue(JSON.stringify(handPointsData));
+            }
         }
+        //console.log(handPointsData);
+        
     }
+    
+    // Restaura el estado previo del contexto del lienzo
     canvasCtx.restore();
 }
 
 const hands = new Hands({locateFile: (file) => {
     return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
 }});
+
+// Opciones de la captación de manos
 hands.setOptions({
     maxNumHands: 2,
     modelComplexity: 1,
@@ -82,6 +114,7 @@ hands.setOptions({
     minTrackingConfidence: 0.9
 });
 hands.onResults(onResults);
+
 
 const camera = new Camera(videoElement, {
     onFrame: async () => {
@@ -91,7 +124,11 @@ const camera = new Camera(videoElement, {
     height: 720
 });
 camera.start();
+st.write(handPointsData);
 """
+
+
+# Código html y JavaScript para mostrar la cámara
 com.html(f'''
     <!DOCTYPE html>
     <html>
@@ -115,7 +152,13 @@ com.html(f'''
     </html>
 ''', height=500)
 
+# Crear un contenedor de almacenaje en streamlit
+hand_points_data = st.empty()
+result_from_js = hand_points_data.text_body
+
+# Mostrar los datos como un array de números en Streamlit
+st.write("Puntos de la mano:",result_from_js )
 
 
-
-# st.markdown(body, unsafe_allow_html=True)
+# Mostrar el footer
+# st.markdown(footer, unsafe_allow_html=True)
