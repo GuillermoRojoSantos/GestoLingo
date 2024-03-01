@@ -14,9 +14,11 @@ Con esta herramienta queremos ayudar a gente con diversidad funcional o impedime
 
 ---
 ## Obtención de datos
-Como anteriormente se mencionó, vamos a obtener los datos de la fuente  "[**Diccionario de la Lengua de Signos Española**](https://fundacioncnse-dilse.org/)", ésta página nos ofrece un buscador en el que nosotros podremos elegir la palabra que queramos aprender y nos aparecerá un video descargable para esa palabra.
 
-En primer lugar utilizaremos técnicas de Web Scraping desde Google Colab para la obtención de esos vídeos.
+### 1º intento
+En un principio se probbó a obtener los datos de la fuente  "[**Diccionario de la Lengua de Signos Española**](https://fundacioncnse-dilse.org/)", ésta página nos ofrece un buscador en el que nosotros podremos elegir la palabra que queramos aprender y nos aparecerá un video descargable para esa palabra.
+
+En primer lugar utilizamos técnicas de Web Scraping desde Google Colab para la obtención de esos vídeos.
 Utilizaremos la librería `BeautifulSoup` y la librería `request` para la obtención de dichos datos
 
 Cuando obtengamos los vídeos de la web, es necesario dividirlo en frames, por lo que usaremos la siguiente función para dividir el vídeo y guardar esos frames en carpetas
@@ -39,10 +41,13 @@ Vamos a mostrar un ejemplo de como se vería un frame de la palabra `hola` con l
 
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/hola_15_marked.png' width = 800px>
 
-Por otra parte, tenemos la app en Python que hemos creado para grabar, frame a frame, los gestos para cada letra del abecedario. Este archivo es `src/detector_manos.py`. En esta app, se importa la clase del archivo `src/seguimiento_manos.py` para usar sus funciones. Al ejecutarla, te pedirá que letra vas a tomar, creará, si no existe, una carpeta llamada `data/Letra_{letra_introducida}`(la letra dependerá de la letra ingresada), que es donde la app tomará y guardará las fotos que tome a tu mano al momento de ejecutar la app.
+### 2º intento y con el que nos quedamos
+Después de probar este método y ver que no sabiamos como implementarlo, decidimos obtener los datos de las manos directamente nosotros mismos con una aplicación en Python, el archivo `src/extract_hands.py`.
+Su funcionamiento redica en que al ejecutarse, pedirá por la terminal que palabras vas a capturar, creando las carpetas correspondientes, cada vez que detecte una mano capturará. Pero, para pasar de toma habrá que pulsar la tecla `Q` del teclado. Si quieres cerrar el programa, solamente tendrás que pulsar `Esc`.
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/captura_mano_con_dibujo.png' width = 800px>
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/Muestradecapturademanos.png' width = 800px>
 
-Al momento de guardar la imagenes, las guarda tal y como lo ves, así que normalmente, estas variables subrayadas, se dejan en `False` para dejar solo la mano sin lines o recuadros.
+#### Extracción de Keypoints de los samples y almacenamiento en archivos HDF
+Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_hands.py` para procesar los keypoints de cada frame almacenado en cada sample, nos generará un archivo `<palabra>.h5`, donde se almacenará el Dataframe de la palabra.
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/partes_a_alterar_dibujo.png' width = 800px>
+<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/muestradesamplesydataframes.png' width = 800px>
