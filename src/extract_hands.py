@@ -99,6 +99,7 @@ with mp.solutions.hands.Hands(
             elif toma_cont == 100:
                 sample_var = "sample_"
             print("me he sumado")
+            print(toma_cont)
             ima_cont=0
 
 cap.release()

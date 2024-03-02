@@ -8,7 +8,7 @@ import numpy as np
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
-f_counter = 0
+
 
 if not os.path.exists("../data/dataFrames/"):
     os.mkdir("../data/dataFrames/")
@@ -21,6 +21,7 @@ with mp_hands.Hands(
     for lista in os.listdir("../data/words/"):
         df = pd.DataFrame(columns=["n_sample", "frame", "keypoints"])
         for sample in os.listdir(f"../data/words/{lista}/"):
+            f_counter = 1
             for image in os.listdir(f"../data/words/{lista}/{sample}/"):
                 frame = cv2.imread(f"../data/words/{lista}/{sample}/{image}")
 
@@ -52,13 +53,10 @@ with mp_hands.Hands(
                     # Agregar filas al DataFrame
 
                     df.loc[len(df.index)] = {"n_sample": int(re.findall("\d+", sample)[0]),
-                                             "frame": int(re.findall("\d+", image)[0]) + 1,
-                                             "keypoints": res_hand_landmarks}
-                    df.loc[len(df.index)] = {"n_sample": int(re.findall("\d+", sample)[0]),
                                              "frame": f_counter,
                                              "keypoints": res_hand_landmarks}
                     f_counter += 1
 
             f_counter = 0
 
-    df.to_hdf(f"../data/dataFrames/{lista}.h5", key="data", mode="w")
+        df.to_hdf(f"../data/dataFrames/{lista}.h5", key="data", mode="w")
