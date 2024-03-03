@@ -1,8 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as com
 import base64
-import json
-
 
 # Configuración de la página
 st.set_page_config(
@@ -39,6 +37,8 @@ footer = f'''
 sin_puntos = 'width: 50%; height: 50%'
 con_puntos = 'display:none'
 
+
+
 # Mostrar el código html y cargar la hoja de estilos (CSS)
 
 with open('./style.css') as css:
@@ -62,8 +62,6 @@ my_js = """
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
-var handPointsData = [];
-
 
 function onResults(results) {
     // Guarda el estado actual del contexto del lienzo
@@ -87,17 +85,14 @@ function onResults(results) {
             // Dibuja los landmarks de la mano
             drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
             if (results.multiHandLandmarks) {
-                const handPointsData = results.multiHandLandmarks[0].flat();  // Obtener todos los puntos de la mano como un array plano
-
-                // Arreglar este punto
-
-                //Streamlit.setComponentValue(JSON.stringify(handPointsData));
+            const handPointsData = results.multiHandLandmarks.flat();  // Obtener todos los puntos de la mano como un array plano
+            console.log(handPointsData)
+            //sendMessageToStreamlitClient("streamlit:setComponentValue", handPointsData);
             }
         }
-        //console.log(handPointsData);
         
     }
-    
+
     // Restaura el estado previo del contexto del lienzo
     canvasCtx.restore();
 }
@@ -115,7 +110,6 @@ hands.setOptions({
 });
 hands.onResults(onResults);
 
-
 const camera = new Camera(videoElement, {
     onFrame: async () => {
         await hands.send({image: videoElement});
@@ -124,11 +118,11 @@ const camera = new Camera(videoElement, {
     height: 720
 });
 camera.start();
-st.write(handPointsData);
 """
 
 
 # Código html y JavaScript para mostrar la cámara
+
 com.html(f'''
     <!DOCTYPE html>
     <html>
@@ -141,6 +135,7 @@ com.html(f'''
     <script type="module">
         {my_js}
     </script>
+    <script> console.log(handPointsData) </script>
     </head>
 
     <body>
@@ -151,14 +146,6 @@ com.html(f'''
     </body>
     </html>
 ''', height=500)
-
-# Crear un contenedor de almacenaje en streamlit
-hand_points_data = st.empty()
-result_from_js = hand_points_data.text_body
-
-# Mostrar los datos como un array de números en Streamlit
-st.write("Puntos de la mano:",result_from_js )
-
 
 # Mostrar el footer
 # st.markdown(footer, unsafe_allow_html=True)
