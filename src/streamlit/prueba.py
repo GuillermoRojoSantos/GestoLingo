@@ -85,7 +85,9 @@ bocadillo = f'''
 <div class="centrado">
     <div>
         <div class="bocadillo-redondo">
-            <p class="texto-bocadillo"> ¡Hola!, para empezar a aprender debes iniciar sesión en la pestaña <b>"Configuración"</b> </p>
+            <section class="texto-bocadillo">  
+                <p class="texto-animado"> Vaya a <b>"Configuración"</b> </p>
+            </section>
         </div>
         <img class="robotin" src="data:image/png;base64,{data_url4}" alt="Robotin">
     </div>
