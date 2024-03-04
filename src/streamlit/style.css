@@ -174,8 +174,8 @@ footer {
 
 .bocadillo-redondo {
     position: relative;
-    height: 150px;
-    width: 300px;
+    height: 155px;
+    width: 305px;
     background: white;
     border-radius: 50%;
     box-shadow: 1px 12px 33px rgba(0, 0, 0, 0.5);
@@ -200,7 +200,6 @@ footer {
 .texto-bocadillo {
     font-size: smaller;
     font-family: monospace;
-    margin: auto;
     color: #275dc0;
 }
 
@@ -216,16 +215,26 @@ footer {
 }
 
 
-.bocadillo-container {
-    position: relative;
-}
 
 .texto-animado {
     animation: animacion 2.5s steps(35), transparent .5s step-end;
     width: 12.1em;
     white-space: nowrap;
     overflow: hidden;
-    font-size: 9ch;
-    color:black;
+    font-size: 3ch;
     border-right:3px solid;
+    font-family: monospace;
+    color: #275dc0;
+}
+
+@keyframes animacion{
+    from{
+        width: 0px;
+    }
+}
+
+@keyframes transparent{
+    50%{
+        border-color: transparent;
+    }
 }
