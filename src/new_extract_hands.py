@@ -21,29 +21,6 @@ HandLandmarker = mp.tasks.vision.HandLandmarker
 baseOptions = mp.tasks.BaseOptions(model_asset_path='../data/model/hand_landmarker.task')
 def get_result(result: mp.tasks.vision.HandLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
     return result
-def draw_landmarks_on_image(rgb_image, detection_result):
-  hand_landmarks_list = detection_result.hand_landmarks
-  handedness_list = detection_result.handedness
-  annotated_image = np.copy(rgb_image)
-
-  # Loop through the detected hands to visualize.
-  for idx in range(len(hand_landmarks_list)):
-    hand_landmarks = hand_landmarks_list[idx]
-    handedness = handedness_list[idx]
-
-    # Draw the hand landmarks.
-    hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
-    hand_landmarks_proto.landmark.extend([
-      landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
-    ])
-    solutions.drawing_utils.draw_landmarks(
-      annotated_image,
-      hand_landmarks_proto,
-      solutions.hands.HAND_CONNECTIONS,
-      solutions.drawing_styles.get_default_hand_landmarks_style(),
-      solutions.drawing_styles.get_default_hand_connections_style())
-
-  return annotated_image
 hloptions = mp.tasks.vision.HandLandmarkerOptions(
     base_options=baseOptions,
     running_mode=mp.tasks.vision.RunningMode.VIDEO,
@@ -54,7 +31,31 @@ hloptions = mp.tasks.vision.HandLandmarkerOptions(
     # result_callback=get_result
 )
 
+# Words' folders creation
+word = input('Ingrese la palabra a aprender: ')
+folder = f"../data/words/{word}/"
+
+if not os.path.exists("../data/"):
+    os.mkdir("../data/")
+if not os.path.exists("../data/words/"):
+    os.mkdir("../data/words/")
+
+if not os.path.exists(folder):
+    print('Carpeta creada ', folder)
+    os.makedirs(folder)
+
+# Una carpeta de muestra se va a llamar sample_n
+dirs = os.listdir(folder)
+if len(dirs) > 0:
+    toma_cont = int(re.findall("\d+",dirs[-1])[0])+1
+else:
+    toma_cont = 0
+
+# Camera capture object's initialization
 cap = cv2.VideoCapture(0)
+# Resolution's configuration (1280x720)
+cap.set(3,1280)
+cap.set(4,720)
 
 with HandLandmarker.create_from_options(hloptions) as landmarker:
     while True:
@@ -83,6 +84,7 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
                 solutions.hands.HAND_CONNECTIONS,
                 solutions.drawing_styles.get_default_hand_landmarks_style(),
                 solutions.drawing_styles.get_default_hand_connections_style())
+            print(result.handedness)
 
         cv2.imshow('GestoLingo', cv2.cvtColor(frame,cv2.COLOR_RGB2BGR))
         if cv2.waitKey(5) == 27:
