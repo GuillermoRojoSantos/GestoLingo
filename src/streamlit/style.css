@@ -219,3 +219,13 @@ footer {
 .bocadillo-container {
     position: relative;
 }
+
+.texto-animado {
+    animation: animacion 2.5s steps(35), transparent .5s step-end;
+    width: 12.1em;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 9ch;
+    color:black;
+    border-right:3px solid;
+}
