@@ -29,6 +29,12 @@ contents2 = file2_.read()
 data_url2 = base64.b64encode(contents2).decode("utf-8")
 file2_.close()
 
+# Logo AWS
+file3_ = open("./images/aws.png", "rb")
+contents3 = file3_.read()
+data_url3 = base64.b64encode(contents3).decode("utf-8")
+file3_.close()
+
 # Código html para header y footer
 
 header = f'''
@@ -38,6 +44,16 @@ header = f'''
         </div>
         <div id="app-name">Gestolingo</div>
     </header>
+'''
+
+configLogo = f'''
+        <div class="logo-aws">
+            <img style = "width:50% " src="data:image/png;base64,{data_url3}" alt="Logo">
+        </div>
+        <h3>Configuración del servidor AWS</h3>
+        <li> ¡Disponible para cuentas corporativas! </li>
+        <li> Accede a nuestra base de datos aportando las credenciales de AWS </li>
+        <li> No olvides confirmar los datos antes de abandonar esta pestaña </li>
 '''
 
 body = f'''
@@ -50,6 +66,7 @@ body = f'''
         <ul>
             <li> En la pestaña <b>Aprender</b> de nuestra Web podrás empezar con un diccionario de vídeos explicativos a aprender tus primeras palabras con el Lenguaje de Signos. </li>
             <li> En el apartado <b>Practicar</b> puedes poner a prueba tus habilidades sobre lo aprendido gracias al sistema de IA implementado en tiempo Real. Recuerda tener tu cámara lista y, ¡A gesticular se ha dicho!. </li>
+            <li> Inicie sesión en <b>Configuración</b> con su cuenta de AWS para poder empezar a aprender </li>
         </ul>
     </div>
     <div class="image-block">
@@ -80,6 +97,8 @@ if 'aws_key' not in st.session_state:
     state["aws_key"] = False
 if 'aws_token' not in st.session_state:
     state["aws_token"] = False
+if 'open_key' not in st.session_state:
+    state["open_key"] = False
 
 tab1, tab2, tab3, tab4 = st.tabs(["Inicio", "Aprender", "Practicar","Configuración"])
 
@@ -88,62 +107,64 @@ with tab1:
   st.markdown(body, unsafe_allow_html=True)
 
 with tab2:
-    # Configurar la conexión a S3
-    s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],aws_session_token=state["aws_token"])
-    busqueda = st.text_input("Buscar la palabra que quieras aprender:")
-    col1, col2,col3,col4,col5 = st.columns(5)
+    if state["open_key"]:
+        # Configurar la conexión a S3
+        s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],aws_session_token=state["aws_token"])
+        busqueda = st.text_input("Buscar la palabra que quieras aprender:")
+        col1, col2,col3,col4,col5 = st.columns(5)
 
-    with col1:
-        st.text("")
-
-    with col2:
-        st.header("La palabra que usted ha escogido es:")
-        st.subheader(busqueda)
-    with col3:
+        with col1:
             st.text("")
-    with col4:
 
-        bucket_name = 'gestolingo'
-        video_key = f'{busqueda}.mov'
-        if busqueda:
-         # Obtener el objeto desde S3
-            try:
-                response = s3.head_object(Bucket=bucket_name, Key=video_key)
-                if response:
-                    response2 = s3.get_object(Bucket=bucket_name, Key=video_key)
-                    # Obtener los datos del video
-                    video_data = response2['Body'].read()
+        with col2:
+            st.header("La palabra que usted ha escogido es:")
+            st.subheader(busqueda)
+        with col3:
+                st.text("")
+        with col4:
 
-                    # Mostrar el video desde los datos obtenidos de S3
-                    st.video(BytesIO(video_data))
-                else:
-                    st.header("La palabra introducida no se encuentra en nuestra Base de Datos")
-                
-            except s3.exceptions.ClientError as e:
-                if e.response['Error']['Code'] == '404':
-                    st.header(f"El objeto {video_key} no existe en el bucket {bucket_name}.")
-                else:
-                    st.header(f"Error al verificar la existencia del objeto: {e}")
-            except Exception as e:
-                st.header(f"Error: {e}")
-        
-    with col5:
-        st.text("")
-    mostrar = st.button("Mostrar Diccionario")
-    if mostrar:
-        # Descargar el archivo CSV desde S3
-        response = s3.get_object(Bucket=bucket_name, Key='palabras_encontradas.csv')
-        content = response['Body'].read().decode('utf-8')
+            bucket_name = 'gestolingo'
+            video_key = f'{busqueda}.mov'
+            if busqueda:
+            # Obtener el objeto desde S3
+                try:
+                    response = s3.head_object(Bucket=bucket_name, Key=video_key)
+                    if response:
+                        response2 = s3.get_object(Bucket=bucket_name, Key=video_key)
+                        # Obtener los datos del video
+                        video_data = response2['Body'].read()
 
-        # Crear el DataFrame a partir del contenido del archivo
-        palabras = pd.read_csv(StringIO(content))
-        # Dividir la columna 'Palabras' en 16 columnas
-        num_columnas = 16
-        columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
-                                        columns=[f'Columna_{i+1}' for i in range(num_columnas)])
-        st.title('Palabras Disponibles')
-        st.dataframe(columnas_divididas)  
+                        # Mostrar el video desde los datos obtenidos de S3
+                        st.video(BytesIO(video_data))
+                    else:
+                        st.header("La palabra introducida no se encuentra en nuestra Base de Datos")
+                    
+                except s3.exceptions.ClientError as e:
+                    if e.response['Error']['Code'] == '404':
+                        st.header(f"El objeto {video_key} no existe en el bucket {bucket_name}.")
+                    else:
+                        st.header(f"Error al verificar la existencia del objeto: {e}")
+                except Exception as e:
+                    st.header(f"Error: {e}")
+            
+        with col5:
+            st.text("")
+        mostrar = st.button("Mostrar Diccionario")
+        if mostrar:
+            # Descargar el archivo CSV desde S3
+            response = s3.get_object(Bucket=bucket_name, Key='palabras_encontradas.csv')
+            content = response['Body'].read().decode('utf-8')
 
+            # Crear el DataFrame a partir del contenido del archivo
+            palabras = pd.read_csv(StringIO(content))
+            # Dividir la columna 'Palabras' en 16 columnas
+            num_columnas = 16
+            columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
+                                            columns=[f'Columna_{i+1}' for i in range(num_columnas)])
+            st.title('Palabras Disponibles')
+            st.dataframe(columnas_divididas)  
+    else:
+        st.header("fsdf")
 with tab3:
     abrir = st.button("Comenzar")
     if abrir:
@@ -194,6 +215,7 @@ with tab4:
 
     col1, col2 = st.columns(2)
     with col1:
+        aws_token = ""
         estudiante = st.toggle("Cuenta de estudiante")
         aws_id = st.text_input("Introduce el aws_access_key_id: ")
         aws_key =st.text_input("Introduce el aws_secret_access_key: ")
@@ -202,25 +224,37 @@ with tab4:
 
         guardar = st.button("Guardar")
         if guardar:
-            if aws_id:
-                # Eliminamos el valor del estado de sesion
-                del state["aws_id"]
-                # Le aplicamos a este estado el valor del id introducido
-                state["aws_id"] = aws_id
+                try:
+                    if aws_id and aws_key:
+                        if aws_id:
+                            # Eliminamos el valor del estado de sesion
+                            del state["aws_id"]
+                            # Le aplicamos a este estado el valor del id introducido
+                            state["aws_id"] = aws_id
+                        if aws_key:
+                            # Eliminamos el valor del estado de sesion
+                            del state["aws_key"]
+                            # Le aplicamos a este estado el valor del id introducido
+                            state["aws_key"] = aws_key
+                        if aws_token:
+                            # Eliminamos el valor del estado de sesion
+                            del state["aws_token"]
+                            # Le aplicamos a este estado el valor del id introducido
+                            state["aws_token"] = aws_token
+                        
+                        try:
+                            s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],aws_session_token=state["aws_token"])
+                            s3.head_object(Bucket='gestolingo', Key='hola.mov')
+                            state["open_key"] = True
+                            st.text("Los datos han sido guardados, pulse para confirmar")
+                            st.button("Confirmar")                  
+                        except:
+                            st.error("Error de Conexión", icon="🚨")
 
-            if aws_key:
-                # Eliminamos el valor del estado de sesion
-                del state["aws_key"]
-                # Le aplicamos a este estado el valor del id introducido
-                state["aws_key"] = aws_key
-            if aws_token:
-                # Eliminamos el valor del estado de sesion
-                del state["aws_token"]
-                # Le aplicamos a este estado el valor del id introducido
-                state["aws_token"] = aws_token
-            st.text("Los datos han sido guardados, pulse para confirmar")
-            confirmacion = st.button("Confirmar")
-        
+
+                except:
+                    st.error("Las credenciales no son correctas", icon="🚨")
     with col2:
-        st.image('images/logo1.png')
-        st.subheader("Para poder habilitar el apartado 'Aprender' es necesario utilizar las credenciales de una cuenta de AWS")
+        st.markdown(configLogo, unsafe_allow_html=True)
+
+

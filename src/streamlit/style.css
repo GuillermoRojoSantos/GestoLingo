@@ -165,3 +165,9 @@ footer {
     align-items: center;
     padding: 20px;
 }
+
+.logo-aws {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
