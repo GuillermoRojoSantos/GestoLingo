@@ -171,3 +171,51 @@ footer {
     justify-content: center;
     align-items: center;
 }
+
+.bocadillo-redondo {
+    position: relative;
+    height: 150px;
+    width: 300px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 1px 12px 33px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.bocadillo-redondo:before {
+    border: 25px solid white;
+    content: '';
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    position: absolute;
+    bottom: -44px;
+    right: 75px;
+    transform: rotate(-8deg);
+}
+
+.texto-bocadillo {
+    font-size: smaller;
+    font-family: monospace;
+    margin: auto;
+    color: #275dc0;
+}
+
+.robotin {
+    width: 128%;
+    height: auto;
+}
+
+.centrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.bocadillo-container {
+    position: relative;
+}

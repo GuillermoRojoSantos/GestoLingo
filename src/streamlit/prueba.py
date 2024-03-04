@@ -35,6 +35,12 @@ contents3 = file3_.read()
 data_url3 = base64.b64encode(contents3).decode("utf-8")
 file3_.close()
 
+# Robot
+file4_ = open("./images/buenas.gif", "rb")
+contents4 = file4_.read()
+data_url4 = base64.b64encode(contents4).decode("utf-8")
+file4_.close()
+
 # Código html para header y footer
 
 header = f'''
@@ -71,6 +77,17 @@ body = f'''
     </div>
     <div class="image-block">
         <img class = "img-index" src="data:image/png;base64,{data_url2}" alt="Logo">
+    </div>
+</div>
+'''
+
+bocadillo = f'''
+<div class="centrado">
+    <div>
+        <div class="bocadillo-redondo">
+            <p class="texto-bocadillo"> ¡Hola!, para empezar a aprender debes iniciar sesión en la pestaña <b>"Configuración"</b> </p>
+        </div>
+        <img class="robotin" src="data:image/png;base64,{data_url4}" alt="Robotin">
     </div>
 </div>
 '''
@@ -164,7 +181,7 @@ with tab2:
             st.title('Palabras Disponibles')
             st.dataframe(columnas_divididas)  
     else:
-        st.header("fsdf")
+        st.markdown(bocadillo, unsafe_allow_html=True)
 with tab3:
     abrir = st.button("Comenzar")
     if abrir:
