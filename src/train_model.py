@@ -54,9 +54,9 @@ model = keras.Sequential(
      layers.Dense(64, activation="relu"),
      layers.BatchNormalization(),
      layers.Dropout(0.2),
+     layers.Dense(32, activation="sigmoid"),
      layers.Dense(32, activation="relu"),
-     layers.Dense(32, activation="relu"),
-     layers.Dense(4, activation="softmax")]
+     layers.Dense(4 , activation="softmax")]
 )
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
@@ -67,8 +67,9 @@ plt.show()
 
 if not os.path.exists("../data/model/"):
     os.mkdir("../data/model/")
-joblib.dump(model, "../data/model/GestoLingo.pkl")
-
+# joblib.dump(model, "../data/model/GestoLingo.pkl")
+print(model.summary())
+model.save("../data/model/GestoLingo.keras")
 # # Uncomment bellow prints if you need clarification of the structure of word_keypoints
 # # print(word_keypoints[0][0])
 # # print(word_keypoints[21][-1])
