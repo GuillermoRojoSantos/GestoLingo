@@ -64,6 +64,9 @@ with open('./style.css') as css:
     st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html = True)
 st.markdown(header, unsafe_allow_html=True)
 footer = f'''
+    <br>
+    <br>
+    <br>
     <footer>
         &copy; 2024 Gestolingo - Traductor de Lenguaje de Signos
     </footer>
@@ -126,7 +129,7 @@ with tab2:
         
     with col5:
         st.text("")
-    mostrar = st.button("Mostrar")
+    mostrar = st.button("Mostrar Diccionario")
     if mostrar:
         # Descargar el archivo CSV desde S3
         response = s3.get_object(Bucket=bucket_name, Key='palabras_encontradas.csv')
@@ -135,7 +138,7 @@ with tab2:
         # Crear el DataFrame a partir del contenido del archivo
         palabras = pd.read_csv(StringIO(content))
         # Dividir la columna 'Palabras' en 16 columnas
-        num_columnas = 28
+        num_columnas = 16
         columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
                                         columns=[f'Columna_{i+1}' for i in range(num_columnas)])
         st.title('Palabras Disponibles')
