@@ -3,6 +3,8 @@ import streamlit as st
 import mediapipe as mp
 import base64
 import boto3
+import pandas as pd
+from io import StringIO
 from PIL import Image
 from io import BytesIO
 
@@ -13,7 +15,6 @@ st.set_page_config(
     page_icon="🤖",
     initial_sidebar_state = "expanded"
 )
-
 
 
 # Logo
@@ -68,14 +69,24 @@ footer = f'''
     </footer>
 '''
 
+state = st.session_state
 
-tab1, tab2, tab3 = st.tabs(["Inicio", "Aprender", "Practicar"])
+if 'aws_id' not in st.session_state:
+    state["aws_id"] = False
+if 'aws_key' not in st.session_state:
+    state["aws_key"] = False
+if 'aws_token' not in st.session_state:
+    state["aws_token"] = False
+
+tab1, tab2, tab3, tab4 = st.tabs(["Inicio", "Aprender", "Practicar","Configuración"])
 
 st.markdown(footer, unsafe_allow_html=True)
 with tab1:
   st.markdown(body, unsafe_allow_html=True)
 
 with tab2:
+    # Configurar la conexión a S3
+    s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],aws_session_token=state["aws_token"])
     busqueda = st.text_input("Buscar la palabra que quieras aprender:")
     col1, col2,col3,col4,col5 = st.columns(5)
 
@@ -86,24 +97,13 @@ with tab2:
         st.header("La palabra que usted ha escogido es:")
         st.subheader(busqueda)
     with col3:
-        st.text("")
+            st.text("")
     with col4:
-
-        aws_id="ASIAXYKJRAYDE7NXZN5Z"
-        aws_key="6IWny0cTRhi+87EVSoUsjtX6cVTJDcbvCchLzJek"
-        aws_token="FwoGZXIvYXdzEHgaDIFFcmATCnlgh9DTXCK+Ad56vpuVK5NT5MQFg9zVt63r9+Bo2fAE8MXiR7o8/ZAfLW3XLHnuOoRckUxO+SusvuMzAqLUe2brMo6cMIRgSM3Kch0jX4KzjNcHMjch1vksM/JnE7lQzE+A3qgmZ3eFAvXDE9uQrfBtXRROzh3JyhZs1B+OlQUV89uajsBLSxEWY+ALRNIEcMjQgGmDLcuA3QG6LUi/ZcvTLufg1VF7cT8YaYOoNB0hQkcrvhmvPKZhCNw1CCFKq8iejmQl0+Uo55eSrwYyLeMgMKjhkv0m7zR30Qfq1EcnnyYLf3pCckGu0vw6R33jXqXEjjEbP+GbNw9EPQ=="
-        # Configurar la conexión a S3
-        # aws_id="ASIAWVSX7FOF7DIM5O4B"
-        # aws_key="luRO9l/BmxATYHC+krdOtCA4NWiGLWN/kTlh6DI+"
-        # aws_token="FwoGZXIvYXdzEHgaDPwES6AdSG0ZUwwfvyLCAYNBtOBaCz9a0ixfVn0ruobDDT71U3FC+WR4yLgRz6LI4Md0Pyl/iWZBMWKmwdLzn6Qn5zdjU3i+CDICx38HLm+mRbKcq+6gRe33JXpehVfx8hOn5Volfl7g/zrAb8v4zlUgKoZrYRrhDPHF09OhaVnPs5CEdSkx6KQ1ey2f13YpNyqy9+aFrj0SXRQIiFS4qKMQ1nBh1qZvH8idLLR1VXNYZHisGkr9PGLkjTy03+2Ko1B080aCEUJ6M2pXC8fsQWx7KK+Jkq8GMi2AfOHG2rCun0lKPAmETxALvCqvNPsiQ635/RIp5URRpCxFLisvWYksVOf0z3c="
-        
-
-        s3 = boto3.client('s3', aws_access_key_id=aws_id, aws_secret_access_key=aws_key,aws_session_token=aws_token)
 
         bucket_name = 'gestolingo'
         video_key = f'{busqueda}.mov'
         if busqueda:
-            # Obtener el objeto desde S3
+         # Obtener el objeto desde S3
             try:
                 response = s3.head_object(Bucket=bucket_name, Key=video_key)
                 if response:
@@ -122,11 +122,24 @@ with tab2:
                 else:
                     st.header(f"Error al verificar la existencia del objeto: {e}")
             except Exception as e:
-                st.header(f"Se produjo un error inesperado: {e}")
+                st.header(f"Error: {e}")
+        
     with col5:
         st.text("")
+    mostrar = st.button("Mostrar")
+    if mostrar:
+        # Descargar el archivo CSV desde S3
+        response = s3.get_object(Bucket=bucket_name, Key='palabras_encontradas.csv')
+        content = response['Body'].read().decode('utf-8')
 
-
+        # Crear el DataFrame a partir del contenido del archivo
+        palabras = pd.read_csv(StringIO(content))
+        # Dividir la columna 'Palabras' en 16 columnas
+        num_columnas = 28
+        columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
+                                        columns=[f'Columna_{i+1}' for i in range(num_columnas)])
+        st.title('Palabras Disponibles')
+        st.dataframe(columnas_divididas)  
 
 with tab3:
     abrir = st.button("Comenzar")
@@ -174,3 +187,37 @@ with tab3:
         cap.release()
         cv2.destroyAllWindows()
 
+with tab4:
+
+    col1, col2 = st.columns(2)
+    with col1:
+        estudiante = st.toggle("Cuenta de estudiante")
+        aws_id = st.text_input("Introduce el aws_access_key_id: ")
+        aws_key =st.text_input("Introduce el aws_secret_access_key: ")
+        if estudiante:
+            aws_token =st.text_input("Introduce el aws_session_token: ")
+
+        guardar = st.button("Guardar")
+        if guardar:
+            if aws_id:
+                # Eliminamos el valor del estado de sesion
+                del state["aws_id"]
+                # Le aplicamos a este estado el valor del id introducido
+                state["aws_id"] = aws_id
+
+            if aws_key:
+                # Eliminamos el valor del estado de sesion
+                del state["aws_key"]
+                # Le aplicamos a este estado el valor del id introducido
+                state["aws_key"] = aws_key
+            if aws_token:
+                # Eliminamos el valor del estado de sesion
+                del state["aws_token"]
+                # Le aplicamos a este estado el valor del id introducido
+                state["aws_token"] = aws_token
+            st.text("Los datos han sido guardados, pulse para confirmar")
+            confirmacion = st.button("Confirmar")
+        
+    with col2:
+        st.image('images/logo1.png')
+        st.subheader("Para poder habilitar el apartado 'Aprender' es necesario utilizar las credenciales de una cuenta de AWS")
