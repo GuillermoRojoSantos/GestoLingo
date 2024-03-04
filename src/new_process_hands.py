@@ -35,31 +35,30 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
             for image in os.listdir(f"../data/words/{lista}/{sample}/"):
                 frame = cv2.imread(f"../data/words/{lista}/{sample}/{image}")
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                result = landmarker.process(frame)
+                frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+                result = landmarker.detect(frame)
                 left_hand = []
                 right_hand = []
 
-                # hand_landmarks_list = result.hand_landmarks
-                # handedness_list = result.handedness
-                if result.hand_landmarks:
-                    for x in range(len(result.handedness)):
-                        if result.handedness[x][0].index == 0:
-                            right_hand = np.array([result.hand_landmarks[x][r].x, result.hand_landmarks[x][r].y,
-                                                   result.hand_landmarks[x][r].z] for r in
-                                                  range(len(result.hand_landmarks[x])))
-                        else:
-                            left_hand = np.array([result.hand_landmarks[x][r].x, result.hand_landmarks[x][r].y,
-                                                  result.hand_landmarks[x][r].z] for r in
-                                                 range(len(result.hand_landmarks[x])))
-
+                hand_landmarks_list = result.hand_landmarks
+                handedness_list = result.handedness
+                if hand_landmarks_list:
+                    for x in range(len(handedness_list)):
+                        if handedness_list[x][0].display_name == "Right":
+                            # Mano Derecha
+                            right_hand = np.array([[x.x, x.y, x.z] for x in hand_landmarks_list[x]]).flatten()
+                        elif handedness_list[x][0].display_name == "Left":
+                            # Mano izquierda
+                            left_hand = np.array([[x.x, x.y, x.z] for x in hand_landmarks_list[x]]).flatten()
                     if len(left_hand) == 0:
                         left_hand = np.zeros(21 * 3)
                     elif len(right_hand) == 0:
                         right_hand = np.zeros((21 * 3))
-
                     res_hand_landmarks = np.concatenate([left_hand, right_hand])
                     df.loc[len(df.index)] = {"n_sample": int(re.findall("\d+", sample)[0]),
                                              "frame": f_counter,
                                              "keypoints": res_hand_landmarks}
+                    f_counter += 1
             f_counter = 0
+
         df.to_hdf(f"../data/dataFrames/{lista}.h5", key="data", mode="w")
