@@ -13,11 +13,11 @@ frame_placeholder = st.empty()
 stop_button_pressed = st.button("stop")
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-model:keras.Sequential = keras.models.load_model("../data/model/GestoLingo.keras")
+model:keras.Sequential = keras.models.load_model("../../data/model/GestoLingo.keras")
 
 keypoints = []
 frame_count = 0
-words = [x[0:-11] for x in os.listdir("../data/treatedDF/")]
+words = [x[0:-11] for x in os.listdir("../../data/treatedDF/")]
 model_prediction_idx = None
 hold_model_result = st.empty()
 hold_model_result.write("Esperando")

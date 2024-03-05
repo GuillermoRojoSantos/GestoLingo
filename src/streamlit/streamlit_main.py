@@ -23,28 +23,24 @@ st.set_page_config(
 # Carga de imágenes para código HTML
 
 # Logo
-file_ = open("./images/logo1.png", "rb")
-contents = file_.read()
-data_url = base64.b64encode(contents).decode("utf-8")
-file_.close()
+with open("./images/logo1.png", "rb") as f:
+    contents = f.read()
+    data_url = base64.b64encode(contents).decode("utf-8")
 
 # Imagen Inicio
-file2_ = open("./images/SBG-TEC.png", "rb")
-contents2 = file2_.read()
-data_url2 = base64.b64encode(contents2).decode("utf-8")
-file2_.close()
+with open("./images/SBG-TEC.png", "rb") as f:
+    contents2 = f.read()
+    data_url2 = base64.b64encode(contents2).decode("utf-8")
 
 # Logo AWS
-file3_ = open("./images/aws.png", "rb")
-contents3 = file3_.read()
-data_url3 = base64.b64encode(contents3).decode("utf-8")
-file3_.close()
+with open("./images/aws.png", "rb") as f:
+    contents3 = f.read()
+    data_url3 = base64.b64encode(contents3).decode("utf-8")
 
 # Robot
-file4_ = open("./images/buenas.gif", "rb")
-contents4 = file4_.read()
-data_url4 = base64.b64encode(contents4).decode("utf-8")
-file4_.close()
+with open("./images/buenas.gif", "rb") as f:
+    contents4 = f.read()
+    data_url4 = base64.b64encode(contents4).decode("utf-8")
 
 
 # Código HTML
@@ -145,7 +141,11 @@ with tab1:
 with tab2:
     if state["open_key"]:
         # Configurar la conexión a S3
-        s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],aws_session_token=state["aws_token"])
+        if state["aws_token"] is not None:
+            s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],
+                              aws_session_token=state["aws_token"])
+        else:
+            s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"])
         busqueda = st.text_input("Buscar la palabra que quieras aprender:")
         col1, col2,col3,col4,col5 = st.columns(5)
 
@@ -216,11 +216,11 @@ with tab3:
         stop_button_pressed = st.button("stop")
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
-        model:keras.Sequential = keras.models.load_model("../data/model/GestoLingo.keras")
+        model:keras.Sequential = keras.models.load_model("../../data/model/GestoLingo.keras")
 
         keypoints = []
         frame_count = 0
-        words = [x[0:-11] for x in os.listdir("../data/treatedDF/")]
+        words = [x[0:-11] for x in os.listdir("../../data/treatedDF/")]
         model_prediction_idx = None
         hold_model_result = st.empty()
         hold_model_result.write("Esperando")
@@ -313,7 +313,13 @@ with tab4:
                             state["aws_token"] = aws_token
                         
                         try:
-                            s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"],aws_session_token=state["aws_token"])
+                            if state["aws_token"] is not None:
+                                s3 = boto3.client('s3', aws_access_key_id=state["aws_id"],
+                                                  aws_secret_access_key=state["aws_key"],
+                                                  aws_session_token=state["aws_token"])
+                            else:
+                                s3 = boto3.client('s3', aws_access_key_id=state["aws_id"],
+                                                  aws_secret_access_key=state["aws_key"])
                             s3.head_object(Bucket='gestolingo', Key='hola.mov')
                             state["open_key"] = True
                             st.text("Los datos han sido guardados, pulse para confirmar")
