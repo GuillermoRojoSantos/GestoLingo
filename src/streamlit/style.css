@@ -1,6 +1,6 @@
 [data-testid="stHeader"] {
     display: none;
-    background-color: #275dc0;
+    background-color: #b7f8ff;
 }
 [data-testid="stAppViewContainer"] {
     background:white;
@@ -21,6 +21,7 @@
 [data-testid="stAppViewBlockContainer"] {
     padding: 0 !important;
 }
+
 
 
 body {
@@ -158,6 +159,7 @@ footer {
     height: auto;
     border-radius: 8px;
 }
+
 
 .index-div {
     display: flex;
