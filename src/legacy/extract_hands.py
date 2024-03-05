@@ -12,10 +12,10 @@ sample_var = "sample_00"
 word = input('Ingrese la palabra a aprender: ')
 folder = f"../data/words/{word}/"
 
-if not os.path.exists("../data/"):
-    os.mkdir("../data/")
-if not os.path.exists("../data/words/"):
-    os.mkdir("../data/words/")
+if not os.path.exists("../../data/"):
+    os.mkdir("../../data/")
+if not os.path.exists("../../data/words/"):
+    os.mkdir("../../data/words/")
 
 if not os.path.exists(folder):
     print('Carpeta creada ', folder)

@@ -10,15 +10,15 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 
-if not os.path.exists("../data/dataFrames/"):
-    os.mkdir("../data/dataFrames/")
+if not os.path.exists("../../data/dataFrames/"):
+    os.mkdir("../../data/dataFrames/")
 
 with mp_hands.Hands(
         model_complexity=0,
         min_detection_confidence=0.2,
         min_tracking_confidence=0.9
 ) as hands:
-    for lista in os.listdir("../data/words/"):
+    for lista in os.listdir("../../data/words/"):
         df = pd.DataFrame(columns=["n_sample", "frame", "keypoints"])
         for sample in os.listdir(f"../data/words/{lista}/"):
             f_counter = 1
