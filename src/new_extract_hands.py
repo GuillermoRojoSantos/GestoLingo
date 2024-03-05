@@ -1,23 +1,12 @@
-import time
-
 import mediapipe as mp
-import numpy as np
 from mediapipe.framework.formats import landmark_pb2
 from mediapipe.python import solutions
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
 import cv2
 import os
 import re
 
 # Mediapipe code
-# BaseOptions = mp.tasks.BaseOptions
 HandLandmarker = mp.tasks.vision.HandLandmarker
-# HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
-# HandLandmarkerResult = mp.tasks.vision.HandLandmarkerResult
-# VisionRunningMode = mp.tasks.vision.RunningMode
-# mp_drawing = mp.solutions.drawing_utils
-# mp_drawing_styles = mp.solutions.drawing_styles
 baseOptions = mp.tasks.BaseOptions(model_asset_path='../data/model/hand_landmarker.task')
 def get_result(result: mp.tasks.vision.HandLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
     return result
@@ -27,8 +16,7 @@ hloptions = mp.tasks.vision.HandLandmarkerOptions(
     num_hands=2,
     min_hand_detection_confidence=0.3,  # lower than value to get predictions more often
     min_hand_presence_confidence=0.1,  # lower than value to get predictions more often
-    min_tracking_confidence=0.3,  # lower than value to get predictions more often
-    # result_callback=get_result
+    min_tracking_confidence=0.3  # lower than value to get predictions more often
 )
 
 ima_cont = 0

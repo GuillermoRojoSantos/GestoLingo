@@ -1,13 +1,10 @@
 import os
 import numpy as np
 import pandas as pd
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.utils import pad_sequences, to_categorical
 from tensorflow.keras import layers, callbacks
-from sklearn.utils import shuffle
 import matplotlib.pyplot as plt
-import joblib
 from sklearn.model_selection import train_test_split
 
 # words = [x[0:-3] for x in os.listdir("../data/dataFrames")]
@@ -30,7 +27,7 @@ X_train, X_test, y_train, y_test = train_test_split(word_keypoints, word_nums, t
 X_train = np.array(X_train)
 y_train = to_categorical(y_train, num_classes=4, dtype="int")
 X_test = np.array(X_test)
-y_test = to_categorical(y_test,num_classes=4,dtype="int")
+y_test = to_categorical(y_test, num_classes=4, dtype="int")
 
 early_stoping = callbacks.EarlyStopping(min_delta=0.001,
                                         patience=5,
@@ -40,10 +37,6 @@ model = keras.Sequential(
     [layers.LSTM(64, return_sequences=True, activation="tanh", input_shape=(30, 126)),
      layers.LSTM(128, return_sequences=True, activation="tanh"),
      layers.LSTM(128, return_sequences=False, activation="tanh"),
-     # Use tanh with Nvidia (enabled cudnn) for faster processing
-     # layers.LSTM(64, return_sequences=True, activation="tanh", input_shape=(60, 126)),
-     # layers.LSTM(128, return_sequences=True, activation="tanh"),
-     # layers.LSTM(128, return_sequences=False, activation="tanh"),
      layers.BatchNormalization(),
      layers.Dense(70, activation="sigmoid"),
      layers.Dropout(0.2),
@@ -59,7 +52,7 @@ model = keras.Sequential(
      layers.Dropout(0.2),
      layers.Dense(32, activation="sigmoid"),
      layers.Dense(32, activation="relu"),
-     layers.Dense(4 , activation="softmax")]
+     layers.Dense(4, activation="softmax")]
 )
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
@@ -74,7 +67,6 @@ plt.show()
 
 if not os.path.exists("../data/model/"):
     os.mkdir("../data/model/")
-# joblib.dump(model, "../data/model/GestoLingo.pkl")
 print(model.summary())
 model.save("../data/model/GestoLingo.keras")
 # # Uncomment bellow prints if you need clarification of the structure of word_keypoints
