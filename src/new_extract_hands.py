@@ -104,7 +104,7 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
             ima_cont += 1
             print(ima_cont)
 
-        elif ima_cont >=20:
+        elif ima_cont >=10:
             toma_cont += 1
             if toma_cont == 10:
                 sample_var = "sample_0"
