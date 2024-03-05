@@ -65,7 +65,7 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
         _,frame = cap.read()
         frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-        timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) if cap.get(cv2.CAP_PROP_POS_MSEC) != None else 0
+        timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) if cap.get(cv2.CAP_PROP_POS_MSEC) is not None else 0
         result = landmarker.detect_for_video(mp_image,int(timestamp))
         frame_c = frame.copy()
 

@@ -8,10 +8,11 @@ from tensorflow.keras import layers, callbacks
 from sklearn.utils import shuffle
 import matplotlib.pyplot as plt
 import joblib
+from sklearn.model_selection import train_test_split
 
 # words = [x[0:-3] for x in os.listdir("../data/dataFrames")]
 words = [x for x in os.listdir("../data/treatedDF")]
-max_frames = 60
+max_frames = 30
 word_keypoints = []  # Keypoint sequence for each sample
 word_nums = []  # Words represented by numbers
 
@@ -22,21 +23,23 @@ for num, word in enumerate(words):
         word_nums.append(num)
 
 # word_keypoints len is the total number of samples
-word_keypoints = pad_sequences(word_keypoints, maxlen=max_frames, padding="post", truncating="post", dtype='float32')
+word_keypoints = pad_sequences(word_keypoints, maxlen=30, padding="post", truncating="post", dtype='float32')
 # word_keypoints shape = (355,60) = (total_n_samples,max_frames)
 
-y_train, X_train = shuffle(word_nums, word_keypoints)
+X_train, X_test, y_train, y_test = train_test_split(word_keypoints, word_nums, test_size=0.30)
 X_train = np.array(X_train)
 y_train = to_categorical(y_train, num_classes=4, dtype="int")
+X_test = np.array(X_test)
+y_test = to_categorical(y_test,num_classes=4,dtype="int")
 
 early_stoping = callbacks.EarlyStopping(min_delta=0.001,
                                         patience=5,
                                         restore_best_weights=True,
                                         monitor="loss")
 model = keras.Sequential(
-    [layers.LSTM(64, return_sequences=True, activation="relu", input_shape=(60, 126)),
-     layers.LSTM(128, return_sequences=True, activation="relu"),
-     layers.LSTM(128, return_sequences=False, activation="relu"),
+    [layers.LSTM(64, return_sequences=True, activation="tanh", input_shape=(30, 126)),
+     layers.LSTM(128, return_sequences=True, activation="tanh"),
+     layers.LSTM(128, return_sequences=False, activation="tanh"),
      # Use tanh with Nvidia (enabled cudnn) for faster processing
      # layers.LSTM(64, return_sequences=True, activation="tanh", input_shape=(60, 126)),
      # layers.LSTM(128, return_sequences=True, activation="tanh"),
@@ -60,9 +63,13 @@ model = keras.Sequential(
 )
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
-history = model.fit(X_train, y_train, epochs=100, callbacks=[early_stoping])
+history = model.fit(X_train,
+                    y_train,
+                    epochs=100,
+                    validation_data=(X_test, y_test),
+                    callbacks=[early_stoping])
 history_df = pd.DataFrame(history.history)
-history_df.loc[:, ['loss']].plot()
+history_df.loc[:, ['loss', 'val_loss']].plot()
 plt.show()
 
 if not os.path.exists("../data/model/"):
