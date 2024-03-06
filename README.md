@@ -161,7 +161,8 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 
 <div id='id3'/>
    
-# Obtención de datos -- `src/new_extract_hands.py` | `notebooks/WebScrapingGestolingo.ipynb`
+# Obtención de datos
+## `src/new_extract_hands.py` | `notebooks/WebScrapingGestolingo.ipynb`
 
 Mediante el uso del script `src/new_extract_hands.py` se obtienen los frames, separados por samples, de cada palabra.
 
@@ -540,11 +541,13 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
 
 <div id='id6'/>
    
-# Preparación de los datos -- `src/new_process_hands.py`
+# Preparación de los datos 
+## `src/new_process_hands.py`
 
 <div id='id7'/>
    
-# Entrenamiento del modelo y comprobación del rendimiento -- `src/train_model.py`
+# Entrenamiento del modelo y comprobación del rendimiento 
+## `src/train_model.py`
 Se realizan las importaciones:
 ```py
 import os
@@ -682,7 +685,8 @@ El **NLP** *"Natural Language Processing"* en éste proyecto es el factor princi
 
 <div id='id9'/>
    
-# Aplicación Web -- `src/streamlit/streamlit_main.py`
+# Aplicación Web 
+## `src/streamlit/streamlit_main.py`
 Importación de las librerias
 ```py
 import cv2
