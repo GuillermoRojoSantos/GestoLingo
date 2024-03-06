@@ -536,6 +536,51 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
 <div id='id5'/>
    
 # Exploración y visualización de los datos (usar gráficas de Guillermo)
+### Dentro de `notebooks\Limpieza_y_Exploración_de_datos.ipynb`
+Tras cargar los dataframes sin limpiar, se muestra el estado de cada dataset
+```py
+ls = [rojo,hola,mundo,ordenador]
+ls_name=["rojo","hola","mundo","ordenador"]
+hold = []
+hold_max = [] 
+hold_min = []
+for index,x in enumerate(ls):
+    print(f"Media de frames en el dataset {ls_name[index]}: ",x.groupby("n_sample").frame.count().mean())
+    hold_min.append(x.groupby("n_sample").frame.count().min())
+    hold.append(x.groupby("n_sample").frame.count().mean())
+    hold_max.append(x.groupby("n_sample").frame.count().max())
+    print(f"Forma del dataset {ls_name[index]}: ",x.shape)
+    print(f"Número de samples en el dataset {ls_name[index]}: ",len(x.n_sample.unique()))
+    print()
+hold = np.array(hold)
+print("Media de frames de todas las muestras: ",hold.mean())
+```
+Y tras esto, se muestra por gráficas con el sample con menos frames de cada dataset, la media de frames por samples en cada dataframe, el sample con más frames dentro de cada dataframes
+```py
+fig,axs = plt.subplots(1,3,figsize=(30,5))
+axs[0].bar(["Rojo","Hola","Mundo","Ordenador"],hold_min)
+axs[1].bar(["Rojo","Hola","Mundo","Ordenador"],hold)
+axs[2].bar(["Rojo","Hola","Mundo","Ordenador"],hold_max)
+
+axs[0].set_title("Min Frames")
+axs[1].set_title("Mean Frames")
+axs[2].set_title("Max Frames")
+
+plt.bar([x for x in range(len(hold))],hold)
+plt.show()
+```
+<img src = 'notebooks\graficos_antes_de_limpieza.png' width = 800px>
+
+
+### Dentro de `notebooks\Entrenamiento.ipynb`
+Se entrena un nuevo modelo, y se muestra una gráfica con la que podremos apreciar la evolución de la pérdida y la validación de la perdida durante el proceso del entrenamiento:
+<img src = 'notebooks\output_model_notebook_1.png' width = 800px>
+
+Y más adelante, se muestra una matriz de confusión para ver cuán bien entrenado está este nuevo modelo, viendo en la diagonal central los aciertos.
+
+<img src = 'notebooks\confusin_matrix_model_notebook_1.png' width = 800px>
+
+
 
 
 <div id='id6'/>
