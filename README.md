@@ -223,14 +223,35 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
            palabras_no_encontradas.append(palabra)
        else:
            palabras_encontradas.append(palabra)
+
+
+
+      # Crear un gráfico de barras
+      fig, ax = plt.subplots()
+      bars = plt.bar(['Encontradas', 'No encontradas'], [len(palabras_encontradas), len(palabras_no_encontradas)])
+      
+      # Agregar etiquetas y título
+      plt.xlabel('Estado de las palabras')
+      plt.ylabel('Número de palabras')
+      plt.title('Comparación de palabras encontradas y no encontradas')
+      
+      # Mostrar el número encima de cada barra
+      for bar in bars:
+          yval = bar.get_height()
+          plt.text(bar.get_x() + bar.get_width() / 2, yval, round(yval, 2), ha='center', va='bottom')
+      
+      # Mostrar el gráfico
+      plt.show()
    ```
+   <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/graficas_encontradas.png' width = 800px>   
+
    Tras esta separación entre encontradas y no encontradas, las no encontradas no son más usadas.
 
    ## Dentro de `Limpieza_y_Exploración_de_Datos.ipynb`
 
    Tras visualizar el estado de las palabras almacenadas en DataFrames, se limitan los samples a tener um máximo de 60 frames por sample, eliminando aquellos samples que superen esa cifra de frames.
 
-   ```
+   ```py
    for ind, x in enumerate(ls):
     for num in x.n_sample.unique():
         indices = x[x.n_sample==num].index
