@@ -22,32 +22,23 @@ El principal propósito de esta herramienta es ayudar a gente con impedimentos d
 
 Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big Data**, logrando conseguir crear un modelo  con Inteligencia Artificial capaz de realizar esta difícil tarea 🦾🤖
 
+---
+
 # Índice
+1. [Arquitectura del proyecto](#id1)
+2. [Tecnologías utilizadas](#id2)
+3. [Obtención de datos](#id3)
+4. [Limpieza de datos](#id4)
+5. [Exploración y visualización de los datos](#id5)
+6. [Preparación de los datos](#id6)
+7. [Entrenamiento del modelo y comprobación del rendimiento](#id7)
+8. [Procesamiento de Lenguaje Natural](#id8)
+9. [Aplicación Web](#id9)
+10. [Bibliografía](#id10)
+11. [Conclusión](#id11)
+---
 
-
-[Arquitectura del proyecto](#arquitectura-del-proyecto-1)
---
-[Tecnologías utilizadas](#tecnologc3adas-utilizadas-1)
---
-[Obtención de datos](#obtencic3b3n-de-datos-1)
---
-[Limpieza de datos](#limpieza-de-datos-1)
---
-[Exploración y visualización de los datos](#preparacic3b3n-de-los-datos-1)
---
-[Preparación de los datos](#preparacic3b3n-de-los-datos-1)
---
-[Entrenamiento del modelo y comprobación del rendimiento](#entrenamiento-del-modelo-y-comprobacic3b3n-del-rendimiento-1)
---
-[Procesamiento de Lenguaje Natural](#procesamiento-de-lenguaje-natural-1)
---
-[Aplicación Web](#aplicacic3b3n-web-1)
---
-[Bibliografía](#bibliografc3ada-1)
---
-[Conclusión](#conclusic3b3n-1)
---
-
+<div id='id1'/>
 # Arquitectura del proyecto
 
 ## Diagrama
@@ -124,6 +115,7 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 
 * [train_model.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/train_model.py): Script que sirve para crear, entrenar y guardar el modelo entrenado en la carpeta data/models.
 
+<div id='id2'/>
 # Tecnologías utilizadas
 
 <div>
@@ -165,7 +157,7 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 * **Pycharm:** Entorno de desarrollo integrado (IDE) para Python.
 
 
-
+<div id='id3'/>
 # Obtención de datos
 
 ### 1º intento
@@ -205,6 +197,7 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
 
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/muestradesamplesydataframes.png' width = 800px>
 
+<div id='id4'/>
 # Limpieza de datos
    ## Dentro de `WebScrapingGestolingo.ipynb`
    Debido a que muchas de las palabras de la lengua española no tienen una traducción definida es necesario limpiar de las palabras propuestas todas aquellas que no se encuentren dentro del diccionario de lenguaje de signos
@@ -259,11 +252,14 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
             x.drop(indices,inplace=True)
    ```
    
+<div id='id5'/>
 # Exploración y visualización de los datos
 
 
+<div id='id6'/>
 # Preparación de los datos
 
+<div id='id7'/>
 # Entrenamiento del modelo y comprobación del rendimiento -- `src/train_model.py`
 Se realizan las importaciones:
 ```py
@@ -386,6 +382,7 @@ if not os.path.exists("../data/model/"):
 model.save("../data/model/GestoLingo.keras")
 ```
 
+<div id='id8'/>
 # Procesamiento de Lenguaje Natural
 
 El **NLP** *"Natural Language Processing"* en éste proyecto es el factor principal del mismo ya que es esencial para lograr una comunicación efectiva entre personas que utilizan este medio de expresión y aquellas que no lo entienden.
@@ -398,6 +395,7 @@ El **NLP** *"Natural Language Processing"* en éste proyecto es el factor princi
 
 * **Flexibilidad y Adaptabilidad:** La aplicación demuestra su capacidad de adaptarse a diversos estilos y velocidades de expresión en el lenguaje de signos, garantizando una experiencia fluida dependiendo de los usuarios que la usen.
 
+<div id='id9'/>
 # Aplicación Web -- `src/streamlit/streamlit_main.py`
 Importación de las librerias
 ```py
@@ -787,7 +785,7 @@ with tab4:
 ```
 
 
-
+<div id='id10'/>
 # Bibliografía
 - [Hand landmarks detection guide for Python](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#video)
 - [Mediapipe - GitHub](https://github.com/google/mediapipe/blob/master/docs/solutions/hands.md)
@@ -804,6 +802,7 @@ with tab4:
 - [GitHub - Docs](https://docs.github.com/en)
 - [Git - Docs](https://git-scm.com/doc)
 
+<div id='id11'/>
 # Conclusión
 
 Este proyecto ha sido una gran experiencia, en la que tuvimos que pasar por muchas dificultades, las cuales 
