@@ -206,7 +206,38 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/muestradesamplesydataframes.png' width = 800px>
 
 # Limpieza de datos
+   ## Dentro de `WebScrapingGestolingo.ipynb`
+   Debido a que muchas de las palabras de la lengua española no tienen una traducción definida es necesario limpiar de las palabras propuestas todas aquellas que no se encuentren dentro del diccionario de lenguaje de signos
+   ```py
+   palabras_no_encontradas = []
+   palabras_encontradas = []
+   requisito = "No se ha encontrado ningún resultado para el término buscado."
 
+   for palabra in palabras_limpias:
+       url2 = f"https://fundacioncnse-dilse.org/?buscar={palabra}"
+       headers = {
+           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
+       response = re.get(url2, headers=headers)
+       soup = BeautifulSoup(response.text, 'html.parser')
+       if soup.find_all("h2")[1].text == requisito:
+           palabras_no_encontradas.append(palabra)
+       else:
+           palabras_encontradas.append(palabra)
+   ```
+   Tras esta separación entre encontradas y no encontradas, las no encontradas no son más usadas.
+
+   ## Dentro de `Limpieza_y_Exploración_de_Datos.ipynb`
+
+   Tras visualizar el estado de las palabras almacenadas en DataFrames, se limitan los samples a tener um máximo de 60 frames por sample, eliminando aquellos samples que superen esa cifra de frames.
+
+   ```
+   for ind, x in enumerate(ls):
+    for num in x.n_sample.unique():
+        indices = x[x.n_sample==num].index
+        if x.loc[indices[-1],"frame"]>60:
+            x.drop(indices,inplace=True)
+   ```
+   
 # Exploración y visualización de los datos
 
 # Preparación de los datos
