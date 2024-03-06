@@ -162,8 +162,7 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 <div id='id3'/>
    
 # Obtención de datos
-## `src/new_extract_hands.py` | `notebooks/WebScrapingGestolingo.ipynb`
-
+### Dentro de `src/new_extract_hands.py`
 Mediante el uso del script `src/new_extract_hands.py` se obtienen los frames, separados por samples, de cada palabra.
 
 Importación de librerias
@@ -299,7 +298,7 @@ cv2.destroyAllWindows()
 
 ---
 
-### El script completo:
+### Bucle completo:
 ```py
 with HandLandmarker.create_from_options(hloptions) as landmarker:
     while True:
@@ -362,7 +361,7 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
 ```
 ---
 
-Dentro de `WebScrapingGestolingo.ipynb`
+### Dentro de `WebScrapingGestolingo.ipynb`
 
 Se instalan los paquetes necesarios
 ```py
@@ -481,7 +480,7 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
 <div id='id4'/>
    
 # Limpieza de datos
-   ## Dentro de `WebScrapingGestolingo.ipynb`
+   ### Dentro de `WebScrapingGestolingo.ipynb`
    Debido a que muchas de las palabras de la lengua española no tienen una traducción definida es necesario limpiar de las palabras propuestas todas aquellas que no se encuentren dentro del diccionario de lenguaje de signos
    ```py
    palabras_no_encontradas = []
@@ -522,7 +521,7 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
 
    Tras esta separación entre encontradas y no encontradas, las no encontradas no son más usadas.
 
-   ## Dentro de `Limpieza_y_Exploración_de_Datos.ipynb`
+   ### Dentro de `Limpieza_y_Exploración_de_Datos.ipynb`
 
    Tras visualizar el estado de las palabras almacenadas en DataFrames, se limitan los samples a tener um máximo de 60 frames por sample, eliminando aquellos samples que superen esa cifra de frames.
 
@@ -542,12 +541,12 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
 <div id='id6'/>
    
 # Preparación de los datos 
-## `src/new_process_hands.py`
+### Dentro de `src/new_process_hands.py`
 
 <div id='id7'/>
    
 # Entrenamiento del modelo y comprobación del rendimiento 
-## `src/train_model.py`
+### Dentro de `src/train_model.py`
 Se realizan las importaciones:
 ```py
 import os
@@ -686,7 +685,7 @@ El **NLP** *"Natural Language Processing"* en éste proyecto es el factor princi
 <div id='id9'/>
    
 # Aplicación Web 
-## `src/streamlit/streamlit_main.py`
+### dentro de `src/streamlit/streamlit_main.py`
 Importación de las librerias
 ```py
 import cv2
