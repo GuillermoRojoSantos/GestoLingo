@@ -507,7 +507,7 @@ footer = f'''
 ```
 Menos el footer, todos estos codigos tienen una imagen que se carga desde una URL de datos base64, generada anteriormente.
 
-Se carga el documento CSS, gracias a `st.markdown` se inserta el contenido del CSS en Streamlit. Enlace al [CSS]('https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/style.css') 
+Se carga el documento CSS, gracias a `st.markdown` se inserta el contenido del CSS en Streamlit. Enlace al [CSS](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/style.css) 
 Gracias a la opción de `unsafe_allow_html=True` se permite que se renderice el contenido HTML dentro de la app de forma segura.
 ```py
 with open('./style.css') as css:
