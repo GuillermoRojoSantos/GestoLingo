@@ -388,6 +388,16 @@ model.save("../data/model/GestoLingo.keras")
 
 # Procesamiento de Lenguaje Natural
 
+El **NLP** *"Natural Language Processing"* en éste proyecto es el factor principal del mismo ya que es esencial para lograr una comunicación efectiva entre personas que utilizan este medio de expresión y aquellas que no lo entienden.
+
+* **Detección de Gestos y Signos:** En esta etapa, la aplicación emplea algoritmos de **Computer Vision** para identificar y comprender los gestos y signos realizados, dando inicio al proceso de interpretación del lenguaje de signos.
+
+* **Traducción Automática:** Una vez detectados los gestos, el sistema realiza una traducción automática, convirtiendo la información visual en texto.
+
+* **Generación de Respuestas:** Basándose en el análisis contextual, la aplicación utiliza un modelo de generación de lenguaje para ofrecer respuestas coherentes y contextualmente relevantes, dandp la posibilidad de ofrecer comunicación bidireccional y mejorar la experiencia del usuario.
+
+* **Flexibilidad y Adaptabilidad:** La aplicación demuestra su capacidad de adaptarse a diversos estilos y velocidades de expresión en el lenguaje de signos, garantizando una experiencia fluida dependiendo de los usuarios que la usen.
+
 # Aplicación Web -- `src/streamlit/streamlit_main.py`
 Importación de las librerias
 ```py
@@ -795,3 +805,21 @@ with tab4:
 - [Git - Docs](https://git-scm.com/doc)
 
 # Conclusión
+
+Este proyecto ha sido una gran experiencia, en la que tuvimos que pasar por muchas dificultades, las cuales 
+parecian que nos haría abandonar el proyecto, pero gracias al esfuerzo, constancia y sobre todo aCtitud,
+ha hecho posible que podamos realizar un modelo ejemplo de lo que podría ser la revolución en el lenguaje
+de signos.
+
+El proyecto no solo se ha afrontado como un "Trabajo de Fin de Máster" sino como un proyecto a futuro, en el
+que nos gustaría continuar trabajando a pesar de la obligatoriedad del mismo.
+
+La falta de tiempo para la realización de éste ha conllevado a la poca cantidad de palabras posibles de
+traducir, ya que se requiere de mucho tiempo para ello, además del amplio desarrollo del proyecto y sobre 
+todo la labor de investigación y aprendizaje que ha requerido.
+
+En definitiva, este trabajo ha despertado en nosotros la pasión por el desarrollo de Inteligencia Artificial 
+y nos ha hecho darnos cuenta de la gran ayuda que podríamos ofrecer al mundo en base a nuestro conocimiento.
+
+
+> *“ La IA que da Voz al silencio “  - Gestolingo*
