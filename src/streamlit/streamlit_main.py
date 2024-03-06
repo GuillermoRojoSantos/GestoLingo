@@ -174,7 +174,7 @@ with tab2:
                         st.video(BytesIO(video_data))
                     else:
                         st.alert("La palabra introducida no se encuentra en nuestra Base de Datos", icon="🚨")
-                    
+
                 except s3.exceptions.ClientError as e:
                     if e.response['Error']['Code'] == '404':
                         st.header(f"La palabra {busqueda} no se encuentra en nuestra base de datos.")
@@ -182,7 +182,7 @@ with tab2:
                         st.header(f"Error al verificar la existencia del objeto: {e}")
                 except Exception as e:
                     st.header(f"Se ha perdido la conexión")
-            
+
         with col5:
             st.text("")
         mostrar = st.button("Mostrar Diccionario")
@@ -198,7 +198,7 @@ with tab2:
             columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
                                             columns=[f'Columna_{i+1}' for i in range(num_columnas)])
             st.title('Palabras Disponibles')
-            st.dataframe(columnas_divididas)  
+            st.dataframe(columnas_divididas)
     else:
         st.markdown(bocadillo, unsafe_allow_html=True)
 
@@ -207,7 +207,7 @@ with tab2:
 with tab3:
     abrir = st.button("Comenzar")
     if abrir:
-        
+
         st.title("Webcam Live Feed")
 
         cap = cv2.VideoCapture(0)
@@ -216,11 +216,11 @@ with tab3:
         stop_button_pressed = st.button("stop")
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
-        model:keras.Sequential = keras.models.load_model("../../data/model/GestoLingo.keras")
+        model:keras.Sequential = keras.models.load_model("./models/GestoLingo.keras")
 
         keypoints = []
         frame_count = 0
-        words = [x[0:-11] for x in os.listdir("../../data/treatedDF/")]
+        words = ["Hola", "Mundo", "Ordenador", "Rojo"]
         model_prediction_idx = None
         hold_model_result = st.empty()
         hold_model_result.write("Esperando")
@@ -311,7 +311,7 @@ with tab4:
                             del state["aws_token"]
                             # Le aplicamos a este estado el valor del id introducido
                             state["aws_token"] = aws_token
-                        
+
                         try:
                             if state["aws_token"] is not None:
                                 s3 = boto3.client('s3', aws_access_key_id=state["aws_id"],
@@ -323,7 +323,7 @@ with tab4:
                             s3.head_object(Bucket='gestolingo', Key='hola.mov')
                             state["open_key"] = True
                             st.text("Los datos han sido guardados, pulse para confirmar")
-                            st.button("Confirmar")                  
+                            st.button("Confirmar")
                         except:
                             st.error("Error de Conexión", icon="🚨")
                 except:
