@@ -37,6 +37,10 @@ Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big D
 
 [Presentación GestoLingo](https://www.youtube.com/watch?v=tqYoQTBiwp4)
 
+# Presentación
+
+[Enlace Presentación](https://www.canva.com/design/DAF-sOMz7J8/we5GD9_yY6vCtxMFwxJrWQ/edit?utm_content=DAF-sOMz7J8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 # Índice
 1. [Arquitectura del proyecto](#id1)
 2. [Tecnologías utilizadas](#id2)
