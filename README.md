@@ -39,6 +39,7 @@ Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big D
 ---
 
 <div id='id1'/>
+   
 # Arquitectura del proyecto
 
 ## Diagrama
@@ -116,6 +117,7 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 * [train_model.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/train_model.py): Script que sirve para crear, entrenar y guardar el modelo entrenado en la carpeta data/models.
 
 <div id='id2'/>
+   
 # Tecnologías utilizadas
 
 <div>
@@ -158,6 +160,7 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 
 
 <div id='id3'/>
+   
 # Obtención de datos
 
 ### 1º intento
@@ -198,6 +201,7 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/muestradesamplesydataframes.png' width = 800px>
 
 <div id='id4'/>
+   
 # Limpieza de datos
    ## Dentro de `WebScrapingGestolingo.ipynb`
    Debido a que muchas de las palabras de la lengua española no tienen una traducción definida es necesario limpiar de las palabras propuestas todas aquellas que no se encuentren dentro del diccionario de lenguaje de signos
@@ -253,13 +257,16 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
    ```
    
 <div id='id5'/>
+   
 # Exploración y visualización de los datos
 
 
 <div id='id6'/>
+   
 # Preparación de los datos
 
 <div id='id7'/>
+   
 # Entrenamiento del modelo y comprobación del rendimiento -- `src/train_model.py`
 Se realizan las importaciones:
 ```py
@@ -383,6 +390,7 @@ model.save("../data/model/GestoLingo.keras")
 ```
 
 <div id='id8'/>
+   
 # Procesamiento de Lenguaje Natural
 
 El **NLP** *"Natural Language Processing"* en éste proyecto es el factor principal del mismo ya que es esencial para lograr una comunicación efectiva entre personas que utilizan este medio de expresión y aquellas que no lo entienden.
@@ -396,6 +404,7 @@ El **NLP** *"Natural Language Processing"* en éste proyecto es el factor princi
 * **Flexibilidad y Adaptabilidad:** La aplicación demuestra su capacidad de adaptarse a diversos estilos y velocidades de expresión en el lenguaje de signos, garantizando una experiencia fluida dependiendo de los usuarios que la usen.
 
 <div id='id9'/>
+   
 # Aplicación Web -- `src/streamlit/streamlit_main.py`
 Importación de las librerias
 ```py
@@ -786,6 +795,7 @@ with tab4:
 
 
 <div id='id10'/>
+
 # Bibliografía
 - [Hand landmarks detection guide for Python](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#video)
 - [Mediapipe - GitHub](https://github.com/google/mediapipe/blob/master/docs/solutions/hands.md)
@@ -803,6 +813,7 @@ with tab4:
 - [Git - Docs](https://git-scm.com/doc)
 
 <div id='id11'/>
+
 # Conclusión
 
 Este proyecto ha sido una gran experiencia, en la que tuvimos que pasar por muchas dificultades, las cuales 
