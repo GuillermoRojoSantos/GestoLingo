@@ -2,9 +2,9 @@
 <img src="https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/logo_tfm.jpeg" width=500px>
 
 # Autores
-- [Guillermo Rojo Santos](https://github.com/GuillermoRojoSantos)
-- [José Antonio Díaz](https://github.com/jada1998velez)
-- [Gabriel Postigo](https://github.com/GabrielPostigo)
+- [Guillermo Rojo Santos](https://github.com/GuillermoRojoSantos) --> 40%
+- [José Antonio Díaz](https://github.com/jada1998velez) --> 35%
+- [Gabriel Postigo](https://github.com/GabrielPostigo) --> 25%
 ---
 # Descripción y Justificación
 
