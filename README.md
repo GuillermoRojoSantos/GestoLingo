@@ -23,6 +23,15 @@ El principal propósito de esta herramienta es ayudar a gente con impedimentos d
 Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big Data**, logrando conseguir crear un modelo  con Inteligencia Artificial capaz de realizar esta difícil tarea 🦾🤖
 
 ---
+# Enlaces de descarga
+
+[Descargar GestoLingo para Windows 10/11](https://www.swisstransfer.com/d/c5d29505-ff13-4b65-a4ae-432588e4b058)
+
+[Descargar GestoLingo para Linux]() (en proceso)
+
+[Descargar GestoLingo para MacOS]() (en proceso)
+
+---
 
 # Índice
 1. [Arquitectura del proyecto](#id1)
@@ -34,8 +43,9 @@ Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big D
 7. [Entrenamiento del modelo y comprobación del rendimiento](#id7)
 8. [Procesamiento de Lenguaje Natural](#id8)
 9. [Aplicación Web](#id9)
-10. [Bibliografía](#id10)
-11. [Conclusión](#id11)
+10. [Freeze de la Aplicación](#id10)
+11. [Bibliografía](#id11)
+12. [Conclusión](#id12)
 ---
 
 <div id='id1'/>
@@ -1216,8 +1226,84 @@ with tab4:
         st.markdown(configLogo, unsafe_allow_html=True)
 ```
 
-
 <div id='id10'/>
+
+# Freeze de la Aplicación
+
+Una vez acabada la aplicación web en su totalidad, estuvimos explorando varias formas de encapsular la aplicación en un 
+archivo binario para cada OS mayormente utilizado (**Windows, Linux, MacOS**).
+
+Trás varios intentos con multiples librerías, nos decantamos por cx-freeze, una herramienta que nos permite encapsular 
+un script de python junto con los archivos que necesite para su ejecución (en nuestro caso, el **modelo** y las 
+**imagenes** de nuestra web). Lo que nos hizo escoger esta librería es la facilidad de la encapsulación. Para ello 
+necesitaremos dos archivos a demás del script de nuestra web:
+- **setup.py**: Script con la configuración de nuestro binario
+- **run.py**: Script de python cuyo código se transformará en nuestro binario
+
+A continuación ponemos un ejemplo de cada uno:
+### run.py:
+````python
+import sys
+import streamlit.web.cli as stcli
+
+def streamlit_run():
+    sys.argv = ["streamlit", "run", "streamlit_main.py", "--global.developmentMode=false"]
+    sys.exit(stcli.main())
+
+
+if __name__ == "__main__":
+    streamlit_run()
+````
+La estructura de setup.py es muy simple. En nuetsro caso, solo consta de una instrucción que se pasará por consola para 
+aprovechar el comando run de la librería de Streamlit en python y ejecutar el código de nuestra web.
+
+### setup.py:
+````python
+from cx_Freeze import setup,Executable
+
+
+setup(
+    name="GestoLingo",
+    version="1.0",
+    description="GestoLingo",
+    executables = [Executable("run.py",base=None)],
+    options={
+        "build_exe":{
+            "include_files":["streamlit_main.py","./images/","./models/","style.css"],
+            "packages":["streamlit","cv2","mediapipe","tensorflow","boto3","numpy","base64","io","os"]
+        }
+    }
+)
+````
+Setup.py es más complejo. Para congelar la aplicación (el proceso de generar un binario con cx-freeze) se puede hacer 
+por consola o bien con un script como setup.py, ya que este no deja de ser las mismas instrucciones del comando build 
+de cx-freeze en un script que tendremos que ejecutar con dicho comando.
+
+En el código podemos destacar dos valores:
+- **description**: En este valor ponemos que archivo queremos que se convierta en el ejecutable.
+- **options**: Podemos pasarle una gran variedad de valores, pero nosotros nos centramos en 2:
+  - *include_files*: Un array con todos los archivos y directorios que queramos añadir al ejecutable para que este pueda
+  acceder a dichos archivos 
+  - *packages*: Un array con todas las librerías necesarias para la aplicación.
+
+Otra de las cosas buenas de cx-freeze es la capacidad que tiene de manejar las librerías. Al especificarle nosotros un 
+array de dependencias, cx-freeze recorrerá en cascada todas las librerías, cogiendo a demás las que tenemos en nuestro 
+entorno en vez de descargarlas de canales como pip o conda con lo que si hemos tenido que modificarlas (como es en 
+nuestro caso) nos ayuda a que nuestra aplicación funcione con menos problemas en distintas máquinas y con distintos OS.
+
+Una vez hecho estos dos archivos simplemente tendremos que ejecutar el comando ``python.exe setup.py build`` y nos 
+generará un ejecutable para el OS en el que hayamos ejecutado el comando.
+
+Al acabar de ejecutar, nos quedaría la siguiente carpeta:
+<div style="display: flex; justify-content: center">
+  <img src = 'images/build_result.png' width = 200px>
+</div>
+
+Como podemos ver nos quedan las carpetas que hemos añadido, además de lib dónde se guardarán las librerías empaquetadas,
+los archivos con la configuración de nuestro entorno virtual y por último, los archivos de nuestra aplicación.
+
+
+<div id='id11'/>
 
 # Bibliografía
 - [Hand landmarks detection guide for Python](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#video)
@@ -1235,7 +1321,7 @@ with tab4:
 - [GitHub - Docs](https://docs.github.com/en)
 - [Git - Docs](https://git-scm.com/doc)
 
-<div id='id11'/>
+<div id='id12'/>
 
 # Conclusión
 
