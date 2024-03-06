@@ -57,7 +57,7 @@ Este proyecto recoge 2 campos fundamentales de la Inteligencia Artificial, como 
 
 * **Data:** Para la recogida y procesamiento de datos
 * **Modelo:** Para la realización de una red neuronal que será el cerebro de la aplicación
-* **Web:** Para mostrar de forma más interactiva el resultado final.
+* **Aplicación:** Para mostrar de forma más interactiva el resultado final.
 
 <img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/ArquitecturaGestoLingo.png' width = 800px>
 
@@ -119,6 +119,10 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
     * [streamlit_main.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/streamlit_main.py): Script principal de la web.
 
     * [style.css](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/style.css): Archivo de la hoja de estilos CSS para la web.
+
+    * [run.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/run.py): ejecutable de la aplicación
+
+    * [setup.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/setup.py): Script que se utiliza para crear el ejecutable de la aplicación
 
 * [new_extract_hands.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/new_extract_hands.py): Script para capturar gestos y almacenar los frames en local, en la carpeta words.
 
