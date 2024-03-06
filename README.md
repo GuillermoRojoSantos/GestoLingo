@@ -543,6 +543,93 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
 # Preparación de los datos 
 ### Dentro de `src/new_process_hands.py`
 
+La importación de las librerias
+```py
+import mediapipe as mp
+import cv2
+import os
+import re
+import pandas as pd
+import numpy as np
+```
+
+Se importa la clase de `HandLandmarker`, gracias a la cuál se realiza la detección y seguimiento de las manos
+```py
+HandLandmarker = mp.tasks.vision.HandLandmarker
+```
+
+Se configuran las opciones base para el modelo(`baseOptions`), proporcionando la ruta del archivo que se usará para realizar las inferencias
+```py
+baseOptions = mp.tasks.BaseOptions(model_asset_path='../data/model/hand_landmarker.task')
+```
+
+Con la variable de `hloptions` se configuran las opciones especificas para el mdoelo, las cuales incluyen:
+- El modo de funcionamiento
+- El número máximo de manos a detectar
+- Las confianzas mínimas para la detección y seguimiento de manos
+```py
+hloptions = mp.tasks.vision.HandLandmarkerOptions(
+    base_options=baseOptions,
+    running_mode=mp.tasks.vision.RunningMode.IMAGE,
+    num_hands=2,
+    min_hand_detection_confidence=0.3, 
+    min_hand_presence_confidence=0.1,  
+    min_tracking_confidence=0.3,  
+)
+```
+Se confirma que exista el directorio, de no existir, se crea
+```py
+if not os.path.exists("../data/dataFrames/"):
+    os.mkdir("../data/dataFrames/")
+```
+
+Para la creación del archivo HDF5 correspondienta a la palabra que esté siendo procesada, se realiza un bucle en el cuál:
+- Se itera sobre los directorios dentro de `data/works`, donde cada directorio corresponde a una palabra guardada
+- Se crea un DataFrame vacío con las columnas para el número de la sample, `n_sample`, el numero del fotograma, `frame`, y los keypoints de las manos, `keypoints`.
+```py
+df = pd.DataFrame(columns=["n_sample", "frame", "keypoints"])
+```
+- Se itera sobre los samples dentro del directorio de cada palabra, cada sample contiene los frames del gesto.
+- Se lee cada imagen, se pasa a RGB y se convierte en un objeto, `mb_image`. Mediante el modelo de detección de manos, `landmarker.detect()`, se encuentran los keypoints que serán almacenados en el `df`, junto a su número de la sample y el número del frame correspondiente.
+- Una vez procesados todos los frames del directorio de la palabra, el `df` se guarda en un archivo HDF5 mediante `df.to_hdf()`, cada archivo HDF5 se nombre con el nombre de la palabra.
+```py
+with HandLandmarker.create_from_options(hloptions) as landmarker:
+    for lista in os.listdir("../data/words/"):
+        df = pd.DataFrame(columns=["n_sample", "frame", "keypoints"])
+        for sample in os.listdir(f"../data/words/{lista}/"):
+            f_counter = 1
+            for image in os.listdir(f"../data/words/{lista}/{sample}/"):
+                frame = cv2.imread(f"../data/words/{lista}/{sample}/{image}")
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+                result = landmarker.detect(frame)
+                left_hand = []
+                right_hand = []
+
+                hand_landmarks_list = result.hand_landmarks
+                handedness_list = result.handedness
+                if hand_landmarks_list:
+                    for x in range(len(handedness_list)):
+                        if handedness_list[x][0].display_name == "Right":
+                            # Mano Derecha
+                            right_hand = np.array([[x.x, x.y, x.z] for x in hand_landmarks_list[x]]).flatten()
+                        elif handedness_list[x][0].display_name == "Left":
+                            # Mano izquierda
+                            left_hand = np.array([[x.x, x.y, x.z] for x in hand_landmarks_list[x]]).flatten()
+                    if len(left_hand) == 0:
+                        left_hand = np.zeros(21 * 3)
+                    elif len(right_hand) == 0:
+                        right_hand = np.zeros((21 * 3))
+                    res_hand_landmarks = np.concatenate([left_hand, right_hand])
+                    df.loc[len(df.index)] = {"n_sample": int(re.findall("\d+", sample)[0]),
+                                             "frame": f_counter,
+                                             "keypoints": res_hand_landmarks}
+                    f_counter += 1
+            f_counter = 0
+
+        df.to_hdf(f"../data/dataFrames/{lista}.h5", key="data", mode="w")
+```
+
 <div id='id7'/>
    
 # Entrenamiento del modelo y comprobación del rendimiento 
