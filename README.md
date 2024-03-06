@@ -779,19 +779,19 @@ with tab4:
 
 
 # Bibliografía
-- [Hand landmarks detection guide for Python]('https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#video')
-- [Mediapipe - GitHub]('https://github.com/google/mediapipe/blob/master/docs/solutions/hands.md')
-- [Diccionario Dilse]('https://fundacioncnse-dilse.org/index.php')
-- [Anaconda - Docs]('https://docs.anaconda.com/free/miniconda/index.html')
-- [OpenCV - Docs]('https://docs.opencv.org/4.x/')
-- [Python - Docs]('https://www.python.org/doc/')
-- [Streamlit - Docs]('https://docs.streamlit.io/')
-- [Amazon AWS - Docs]('https://docs.aws.amazon.com/')
-- [Jupyter - Docs]('https://docs.jupyter.org/en/latest/')
-- [Tensorflow]('https://www.tensorflow.org/?hl=es')
-- [Keras - Docs]('https://keras.io/')
-- [Cx-Freeze]('https://cx-freeze.readthedocs.io/en/stable/')
-- [GitHub - Docs]('https://docs.github.com/en')
-- [Git - Docs]('https://git-scm.com/doc')
+- [Hand landmarks detection guide for Python](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#video)
+- [Mediapipe - GitHub](https://github.com/google/mediapipe/blob/master/docs/solutions/hands.md)
+- [Diccionario Dilse](https://fundacioncnse-dilse.org/index.php)
+- [Anaconda - Docs](https://docs.anaconda.com/free/miniconda/index.html)
+- [OpenCV - Docs](https://docs.opencv.org/4.x/)
+- [Python - Docs](https://www.python.org/doc/)
+- [Streamlit - Docs](https://docs.streamlit.io/)
+- [Amazon AWS - Docs](https://docs.aws.amazon.com/)
+- [Jupyter - Docs](https://docs.jupyter.org/en/latest/)
+- [Tensorflow](https://www.tensorflow.org/?hl=es)
+- [Keras - Docs](https://keras.io/)
+- [Cx-Freeze](https://cx-freeze.readthedocs.io/en/stable/)
+- [GitHub - Docs](https://docs.github.com/en)
+- [Git - Docs](https://git-scm.com/doc)
 
 # Conclusión
