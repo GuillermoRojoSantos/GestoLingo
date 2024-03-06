@@ -268,6 +268,9 @@ Tras lo cuál, se almacenan los frames en los cuales se hayan detectado manos en
             print(ima_cont)
 ```
 
+   <img src = 'images/almacenamiento_mewing.png' width = 800px>   
+
+
 Como se controla la numeración de los samples
 ```py
 elif ima_cont >=10:
@@ -359,6 +362,9 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
             break
 
 ```
+   <img src = 'images/mewingPRO.gif' width = 800px>   
+
+
 ---
 
 ### Dentro de `WebScrapingGestolingo.ipynb`
@@ -535,7 +541,7 @@ s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
    
 <div id='id5'/>
    
-# Exploración y visualización de los datos (usar gráficas de Guillermo)
+# Exploración y visualización de los datos
 ### Dentro de `notebooks\Limpieza_y_Exploración_de_datos.ipynb`
 Tras cargar los dataframes sin limpiar, se muestra el estado de cada dataset
 ```py
@@ -674,6 +680,8 @@ with HandLandmarker.create_from_options(hloptions) as landmarker:
 
         df.to_hdf(f"../data/dataFrames/{lista}.h5", key="data", mode="w")
 ```
+Así es como se verá el dataframe almacenado en el archivo HDF5
+ <img src = 'images/dataframe_procesado.png' width = 800px>   
 
 <div id='id7'/>
    
@@ -813,6 +821,9 @@ El **NLP** *"Natural Language Processing"* en éste proyecto es el factor princi
 * **Generación de Respuestas:** Basándose en el análisis contextual, la aplicación utiliza un modelo de generación de lenguaje para ofrecer respuestas coherentes y contextualmente relevantes, dandp la posibilidad de ofrecer comunicación bidireccional y mejorar la experiencia del usuario.
 
 * **Flexibilidad y Adaptabilidad:** La aplicación demuestra su capacidad de adaptarse a diversos estilos y velocidades de expresión en el lenguaje de signos, garantizando una experiencia fluida dependiendo de los usuarios que la usen.
+
+   <img src = 'images/prueba_gestolingo_hola.gif' width = 800px>   
+
 
 <div id='id9'/>
    
