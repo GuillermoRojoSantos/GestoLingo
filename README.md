@@ -161,44 +161,321 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 
 <div id='id3'/>
    
-# Obtención de datos
+# Obtención de datos -- `src/new_extract_hands.py` | `notebooks/WebScrapingGestolingo.ipynb`
 
-### 1º intento
-En un principio se probbó a obtener los datos de la fuente  "[**Diccionario de la Lengua de Signos Española**](https://fundacioncnse-dilse.org/)", ésta página nos ofrece un buscador en el que nosotros podremos elegir la palabra que queramos aprender y nos aparecerá un video descargable para esa palabra.
+Mediante el uso del script `src/new_extract_hands.py` se obtienen los frames, separados por samples, de cada palabra.
 
-En primer lugar utilizamos técnicas de Web Scraping desde Google Colab para la obtención de esos vídeos.
-Utilizaremos la librería `BeautifulSoup` y la librería `request` para la obtención de dichos datos
+Importación de librerias
+```py
+import mediapipe as mp
+from mediapipe.framework.formats import landmark_pb2
+from mediapipe.python import solutions
+import cv2
+import os
+import re
+```
+Se importa la clase de `HandLandmarker`, gracias a la cuál se realiza la detección y seguimiento de las manos
+```py
+HandLandmarker = mp.tasks.vision.HandLandmarker
+```
+Se configuran las opciones base para el modelo(`baseOptions`), proporcionando la ruta del archivo que se usará para realizar las inferencias
+```py
+baseOptions = mp.tasks.BaseOptions(model_asset_path='../data/model/hand_landmarker.task')
+```
+Con la variable de `hloptions` se configuran las opciones especificas para el mdoelo, las cuales incluyen:
+- El modo de funcionamiento
+- El número máximo de manos a detectar
+- Las confianzas mínimas para la detección y seguimiento de manos
+```py
+hloptions = mp.tasks.vision.HandLandmarkerOptions(
+    base_options=baseOptions,
+    running_mode=mp.tasks.vision.RunningMode.IMAGE,
+    num_hands=2,
+    min_hand_detection_confidence=0.3, 
+    min_hand_presence_confidence=0.1,  
+    min_tracking_confidence=0.3,  
+)
+```
+Se crea un contador de imagenes, `ima_cont=0` que será usado más adelante y una variable que contiene el molde para los nombres de las samples, `sample_var='sample_00'`
 
-Cuando obtengamos los vídeos de la web, es necesario dividirlo en frames, por lo que usaremos la siguiente función para dividir el vídeo y guardar esos frames en carpetas
+Se establece el nombre de la palabra a grabar con un `input()`, pidiendonos el nombre por consola y se crea la ruta donde se almacenará las samples de la palabra grabada
+```py
+word = input('Ingrese la palabra a aprender: ')
+folder = f"../data/words/{word}/"
+```
 
-(***NOTA:** Vamos a usar una sola palabra como ejemplo, pero se deberá de hacer después con todas las que queramos*)
+Se comprueba la existencia de diversas carpetas, en caso de que alguna no exista, se creará.
+```py
+if not os.path.exists("../data/"):
+    os.mkdir("../data/")
+if not os.path.exists("../data/words/"):
+    os.mkdir("../data/words/")
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/scraping.png' width = 800px>
+if not os.path.exists(folder):
+    print('Carpeta creada ', folder)
+    os.makedirs(folder)
+```
 
-Para guardar las imágenes y no tener que repetir el proceso cada vez que iniciamos el colab, utilizamos el siguiente código
+A continuación se almacena en la variable `dirs` un listado de que hay en directorio `folder`, en caso de no haber nada se establece `toma_cont` a 0. Si hay contenido ya, se toma el último número de sample que haya, y le suma uno para que no se machaque.
+```py
+dirs = os.listdir(folder)
+if len(dirs) > 0:
+    toma_cont = int(re.findall("\d+",dirs[-1])[0])+1
+else:
+    toma_cont = 0
+```
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/descargar_directorio.png' width = 800px>
+Inicialización del objeto de captura de video
+```py
+cap = cv2.VideoCapture(0)
+```
+Configuración de la resolución del objeto de captura
+```py
+cap.set(3,1280)
+cap.set(4,720)
+```
 
-Usando el modelo de Mediapipe de detección de manos, hacemos una predicción en cada frame de la posición de las manos, para ello utilizamos el siguiente código:
+Aquí empieza el bucle principal para captar las manos y guardar los frames, este bucle se termina cuando pulses la tecla 'Esc' de tu teclado.
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/marcar_mediapipe.png' width = 800px>
+Se lee el fotograma de video actual(`frame`), el cuál luego se pasa a formato RGB para que Mediapipe pueda trabajar con él, se crea un objeto para representar el frame, `mp_image`, y se usa el método `detect_for_video` para detectar y seguir las manos del frame.
 
-Con el modelo de Mediapipe que se ha mencionado antes, se ha creado una clase con funcionalidades dedicadas al seguimiento de manos (el archivo `src/seguimiento_manos.py`), en el cuál se establecen las funciones para ubicar una sola mano o ambas, detectar la posición de de estas, cuantos dedos hay levantados y la distancia que hay entre los dedos de cada mano.
+Se recorren las manos detectadas, dibujandoles los landmarks. 
+```py
+hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+hand_landmarks_proto.landmark.extend([
+landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+])
+solutions.drawing_utils.draw_landmarks(
+    frame_c,
+    hand_landmarks_proto,
+    solutions.hands.HAND_CONNECTIONS,
+    solutions.drawing_styles.get_default_hand_landmarks_style(),
+    solutions.drawing_styles.get_default_hand_connections_style())
+```
 
-Vamos a mostrar un ejemplo de como se vería un frame de la palabra `hola` con la detección del mediapipe.
+Tras lo cuál, se almacenan los frames en los cuales se hayan detectado manos en ellos en el directorio. En función del contador `ima_cont`, se irá modificando la numeración de la imagen guardada.
+```py
+            if ima_cont < 10:
+                cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_00{ima_cont}.jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            elif ima_cont < 100:
+                cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_0{ima_cont}.jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            else:
+                cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_{ima_cont}.jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            ima_cont += 1
+            print(ima_cont)
+```
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/hola_15_marked.png' width = 800px>
+Como se controla la numeración de los samples
+```py
+elif ima_cont >=10:
+            toma_cont += 1
+            if toma_cont == 10:
+                sample_var = "sample_0"
+            elif toma_cont == 100:
+                sample_var = "sample_"
+            print("me he sumado")
+            print(toma_cont)
+            ima_cont = 0
+```
 
-### 2º intento y con el que nos quedamos
-Después de probar este método y ver que no sabiamos como implementarlo, decidimos obtener los datos de las manos directamente nosotros mismos con una aplicación en Python, el archivo `src/extract_hands.py`.
-Su funcionamiento redica en que al ejecutarse, pedirá por la terminal que palabras vas a capturar, creando las carpetas correspondientes, cada vez que detecte una mano capturará. Pero, para pasar de toma habrá que pulsar la tecla `Q` del teclado. Si quieres cerrar el programa, solamente tendrás que pulsar `Esc`.
+Se muestra el frame procesado actual en una ventana llamada 'Gestolingo' mediante el siguiente código
+```py
+cv2.imshow('GestoLingo', cv2.cvtColor(frame_c,cv2.COLOR_RGB2BGR))
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/Muestradecapturademanos.png' width = 800px>
+Si se pulsa la tecla 'Esc' mientras se ejecuta el script, se cierra la aplicación y termina el bucle
+```py
+if cv2.waitKey(5) == 27:
+            break
+```
+Al terminar el bucle, se libera el objeto de captura de video `cap` y se cierran todas las ventanas
+```py
+cap.release()
+cv2.destroyAllWindows()
+```
 
-#### Extracción de Keypoints de los samples y almacenamiento en archivos HDF
-Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_hands.py` para procesar los keypoints de cada frame almacenado en cada sample, nos generará un archivo `<palabra>.h5`, donde se almacenará el Dataframe de la palabra.
+---
 
-<img src = 'https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/images/muestradesamplesydataframes.png' width = 800px>
+### El script completo:
+```py
+with HandLandmarker.create_from_options(hloptions) as landmarker:
+    while True:
+        _,frame = cap.read()
+        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+        timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) if cap.get(cv2.CAP_PROP_POS_MSEC) is not None else 0
+        result = landmarker.detect_for_video(mp_image,int(timestamp))
+        frame_c = frame.copy()
+
+        hand_landmarks_list = result.hand_landmarks
+        handedness_list = result.handedness
+        if result.hand_landmarks:
+            if not os.path.exists(f"{folder}/{sample_var}{toma_cont}/"):
+                os.mkdir(f"{folder}/{sample_var}{toma_cont}/")
+                print(f" Carpeta {folder}/{sample_var}{toma_cont}/ creada")
+        # Loop through the detected hands to visualize.
+            for idx in range(len(hand_landmarks_list)):
+                hand_landmarks = hand_landmarks_list[idx]
+                handedness = handedness_list[idx]
+
+                # Draw the hand landmarks.
+                hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+                hand_landmarks_proto.landmark.extend([
+                    landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+                ])
+                solutions.drawing_utils.draw_landmarks(
+                    frame_c,
+                    hand_landmarks_proto,
+                    solutions.hands.HAND_CONNECTIONS,
+                    solutions.drawing_styles.get_default_hand_landmarks_style(),
+                    solutions.drawing_styles.get_default_hand_connections_style())
+
+            if ima_cont < 10:
+                cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_00{ima_cont}.jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            elif ima_cont < 100:
+                cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_0{ima_cont}.jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            else:
+                cv2.imwrite(f"{folder}/{sample_var}{toma_cont}/{word}_{ima_cont}.jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            ima_cont += 1
+            print(ima_cont)
+
+        elif ima_cont >=10:
+            toma_cont += 1
+            if toma_cont == 10:
+                sample_var = "sample_0"
+            elif toma_cont == 100:
+                sample_var = "sample_"
+            print("me he sumado")
+            print(toma_cont)
+            ima_cont = 0
+
+        cv2.imshow('GestoLingo', cv2.cvtColor(frame_c,cv2.COLOR_RGB2BGR))
+        if cv2.waitKey(5) == 27:
+            break
+
+```
+---
+
+Dentro de `WebScrapingGestolingo.ipynb`
+
+Se instalan los paquetes necesarios
+```py
+!pip install unidecode
+!pip install boto3
+```
+Se importan las librerias que vamos a usar
+```py
+from bs4 import BeautifulSoup
+import requests as re
+import boto3
+from unidecode import unidecode
+import matplotlib.pyplot as plt
+import pandas as pd
+```
+
+Mediante el siguiente array de palabras
+```py
+palabras = ["Padre", "Madre", "Hijo","Hija", "Abuelo", "Abuela", "Hermano", "Hermana","Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo",
+"Cabeza", "Brazo", "Pierna", "Mano", "Pie", "Ojo", "Nariz", "Boca","Mundo", "Ordenador", "Traducir", "Inteligencia", "Hola", "Camisa", "Pantalón", "Vestido", "Zapato", "Sombrero", "Calcetín", "Chaqueta",
+"Pan", "Fruta", "Verdura", "Carne", "Arroz", "Leche", "Agua", "Postre", "Rojo", "Azul", "Amarillo", "Verde", "Blanco", "Negro", "Marrón", "Gris",
+"Desayunar", "Almorzar", "Cenar", "Dormir", "Trabajar", "Estudiar", "Jugar", "Feliz", "Triste", "Enojado", "Sorprendido", "Asustado", "Contento",
+"Ordenador", "Software", "Hardware", "Archivo", "Programa", "Pantalla", "Teclado", "Ratón", "Internet", "Usuario", "amar", "beber", "caminar", "cantar", "comer", "correr", "decidir", "escribir", "estudiar", "hablar",
+"jugar", "leer", "mirar", "nadar", "pensar", "saltar", "trabajar", "viajar", "vivir", "aprender","asistir", "cambiar", "cocinar", "construir", "contribuir","descansar", "desear", "encontrar", "escuchar",
+"explicar", "ganar", "gritar", "inventar", "llorar", "mentir","olvidar", "opinar", "participar", "permitir", "perder", "preferir", "recibir", "recordar", "sonreír", "terminar", "tocar", "tratar", "utilizar", "visitar"]
+```
+
+Le realizamos una función para limpiar los acentos y poner todas las palabras en minusculas:
+```py
+def limpiar_palabra(palabra):
+    palabra_limpia = unidecode(palabra.lower())
+    return palabra_limpia
+
+palabras_limpias = [limpiar_palabra(palabra) for palabra in palabras]
+print(palabras_limpias)
+```
+
+Guardamos las credenciales de AWS, para su posterior uso
+```py
+aws_id = 'xxxxxxxxxxxxxxxx'
+aws_key = 'xxxxxxxxxxxxxxxxxxx'
+aws_token = 'xxxxxxxxxxxxxxxxxx'
+region = 'us-east-1'
+```
+Se realiza la petición de las palabras del array, para ver si están dentro de la página de Dilse. Después, se separan las que hay y las que no están.
+```py
+palabras_no_encontradas = []
+palabras_encontradas = []
+requisito = "No se ha encontrado ningún resultado para el término buscado."
+
+for palabra in palabras_limpias:
+    url2 = f"https://fundacioncnse-dilse.org/?buscar={palabra}"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
+    response = re.get(url2, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    if soup.find_all("h2")[1].text == requisito:
+        palabras_no_encontradas.append(palabra)
+    else:
+        palabras_encontradas.append(palabra)
+```
+Tras esta separación, se muestra un gráfico para mostrar cuantas han sido encontradas y cuantas no
+```py
+fig, ax = plt.subplots()
+bars = plt.bar(['Encontradas', 'No encontradas'], [len(palabras_encontradas), len(palabras_no_encontradas)])
+
+plt.xlabel('Estado de las palabras')
+plt.ylabel('Número de palabras')
+plt.title('Comparación de palabras encontradas y no encontradas')
+
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width() / 2, yval, round(yval, 2), ha='center', va='bottom')
+
+plt.show()
+```
+
+Tras esto, se establece conexión con S3 para subir los videos de cada palabra en nuestro Bucket de AWS S3 
+```py
+s3 = boto3.client('s3', aws_access_key_id=aws_id, aws_secret_access_key=aws_key,aws_session_token=aws_token,region_name=region)
+```
+
+Hacemos peticiones para cada palabra, para poder descargar cada video de cada palabra y subirlo al bucked de S3
+```py
+for palabra in palabras_encontradas:
+  # Definimos las URL de descarga y el nombre del archivo
+  url = f"https://fundacioncnse-dilse.org/bddilse/images/stories/{palabra}.mov"
+  nombre_archivo = f"{palabra}.mov"
+  headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
+
+  respuesta = re.get(url,headers=headers)
+  response.text
+  soup = BeautifulSoup(response.text,'html.parser')
+  respuesta.raise_for_status()
+
+  with open(nombre_archivo, 'wb') as archivo:
+      archivo.write(respuesta.content)
+  s3.put_object(Body=respuesta.content, Bucket="gestolingo", Key=nombre_archivo)
+  print(f"Descarga exitosa: {nombre_archivo}")
+```
+
+Se exporta a S3 un CSV con todas las palabras que se han guardado (se usará en la web)
+```py
+df = pd.DataFrame({'Palabras': palabras_encontradas})
+df.to_csv('palabras_encontradas.csv', index=False)
+
+nombre_archivo_local = 'palabras_encontradas.csv'
+bucket_name = 'gestolingo'
+nombre_archivo_s3 = 'palabras_encontradas.csv'
+
+s3.upload_file(nombre_archivo_local, bucket_name, nombre_archivo_s3)
+```
+
 
 <div id='id4'/>
    
@@ -258,12 +535,12 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
    
 <div id='id5'/>
    
-# Exploración y visualización de los datos
+# Exploración y visualización de los datos (usar gráficas de Guillermo)
 
 
 <div id='id6'/>
    
-# Preparación de los datos
+# Preparación de los datos -- `src/new_process_hands.py`
 
 <div id='id7'/>
    
