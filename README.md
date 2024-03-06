@@ -629,6 +629,16 @@ with tab2:
 Pasemos a la pestaña 3, 'Practicar'
 En la cual, verás un botón que te dice 'Comenzar', si le das, se abrira tu cámara, mediante `cap = cv2.VideoCapture(0)`
 Se crea un espacio de visualización  para los frames, mediante `st.empty()`
+Se carga el modelo (entrenado previamente con `src/train_model.py`), con `model:keras.Sequential = keras.models.load_model("../../data/model/GestoLingo.keras")`
+Se inicia un bucle `while` que va capturando frames del video en vivo y procesa la detección de las manos. Este bucle finalizará al pulsar el botón 'Stop'
+Por cada frame se hace una serie de pasos:
+   - Se convierte a RGB y se procesa con `Mediapipe Hands` para detectar las manos.
+   - Se dibujan las landmarks
+   - Se procesan las coordenadas de los landmarks para dictaminar que mano se está captando, si la derecha o la izquierda.
+   - Se almacenan los keypoints de la mano detectada en una lista
+   - Se verifica si se ha detectado una mano y si hay suficientes keypoints almacenados. Si se cumplen ambas, se incrementa el contador de frames y se realiza una predicción.
+   - Dicha predicción se muestra en un objeto de Streamlit llamado `hold_meter_result.write()`
+   - La imagen del frame procesado se muestra en el espacio de visualización creado usando `frame_placeholder.image`
 ```py
 with tab3:
     abrir = st.button("Comenzar")
@@ -705,6 +715,67 @@ with tab3:
                 if stop_button_pressed:
                     break
 ```
+Y por último, pero no menos importante, pasamos a la pestaña 4, 'Configuración'
+Aquí nos dividimos en dos columnas lo que veremos lo siguiente,
+En la columna 1:
+- Hay un interruptor toggle, que indicará quieres o no ingresar con una cuenta de estudiante. Esto hará que aparezca un campo extra para introducir la credencial de token su usas una cuenta de estudiante o no aparezca.
+- Al introducir las credenciales correspondientes, pulsaremos el botón de 'Guardar', cuando esto suceda, se intentará verificar las credenciales, si son correctas, se modificará el estado de sesión, `state["open_key"]`.
+- Se intentará establecer conexión con AWS S3, si es exitosa, devuelve `state["open_key"]=True`, se mostrará un mesaje de exito, se guardan las credenciales y que el usuario confirme pulsando un nuevo botón.
+- En caso de fallar algo, saldrá un mensaje de error.
+
+En la columna 2 se muestra el logo de AWS que establecimos antes en la variable `configLogo`
+```py
+with tab4:
+
+    col1, col2 = st.columns(2)
+    with col1:
+        aws_token = ""
+        estudiante = st.toggle("Cuenta de estudiante")
+        aws_id = st.text_input("Introduce el aws_access_key_id: ")
+        aws_key =st.text_input("Introduce el aws_secret_access_key: ")
+        if estudiante:
+            aws_token =st.text_input("Introduce el aws_session_token: ")
+
+        guardar = st.button("Guardar")
+        if guardar:
+                try:
+                    if aws_id and aws_key:
+                        if aws_id:
+                            # Eliminamos el valor del estado de sesion
+                            del state["aws_id"]
+                            # Le aplicamos a este estado el valor del id introducido
+                            state["aws_id"] = aws_id
+                        if aws_key:
+                            # Eliminamos el valor del estado de sesion
+                            del state["aws_key"]
+                            # Le aplicamos a este estado el valor del id introducido
+                            state["aws_key"] = aws_key
+                        if aws_token:
+                            # Eliminamos el valor del estado de sesion
+                            del state["aws_token"]
+                            # Le aplicamos a este estado el valor del id introducido
+                            state["aws_token"] = aws_token
+                        
+                        try:
+                            if state["aws_token"] is not None:
+                                s3 = boto3.client('s3', aws_access_key_id=state["aws_id"],
+                                                  aws_secret_access_key=state["aws_key"],
+                                                  aws_session_token=state["aws_token"])
+                            else:
+                                s3 = boto3.client('s3', aws_access_key_id=state["aws_id"],
+                                                  aws_secret_access_key=state["aws_key"])
+                            s3.head_object(Bucket='gestolingo', Key='hola.mov')
+                            state["open_key"] = True
+                            st.text("Los datos han sido guardados, pulse para confirmar")
+                            st.button("Confirmar")                  
+                        except:
+                            st.error("Error de Conexión", icon="🚨")
+                except:
+                    st.error("Las credenciales no son correctas", icon="🚨")
+    with col2:
+        st.markdown(configLogo, unsafe_allow_html=True)
+```
+
 
 
 # Bibliografía
