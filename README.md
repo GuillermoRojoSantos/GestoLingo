@@ -101,9 +101,69 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 
 * [WebScrapingGestolingo.ipynb](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/notebooks/WebScrapingGestolingo.ipynb):  Cuaderno Jupyter donde se realiza un scrapeo al diccionario Dilse, descarga los videos y los sube a un bucket en S3.
 
+[src](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src): Directorio donde se almacenan los scripts principales.
 
+* [legacy](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/legacy): Directorio donde quedan guardados los scripts de una versión antigua, en la que se usó un modelo de mediapipe diferente.
+
+    * [extract_hands.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/legacy/extract_hands.py): Script de extracción de gestos y almacenado en local.
+
+    * [process_hands.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/legacy/process_hands.py): Script para procesar y obtener los archivos HDF5 de las palabras almacenadas en el directorio words.
+
+
+* [streamlit](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit): Directorio donde se almacenan los scripts y archivos relacionados con la aplicación web.
+
+    * [images](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/images): Directorio donde se almacenan las imágenes usadas en la web.
+
+    * [streamlit_main.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/streamlit_main.py): Script principal de la web.
+
+    * [style.css](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/streamlit/style.css): Archivo de la hoja de estilos CSS para la web.
+
+* [new_extract_hands.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/new_extract_hands.py): Script para capturar gestos y almacenar los frames en local, en la carpeta words.
+
+* [new_process_hands.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/new_process_hands.py): Script que procesa los gestos almacenados en words y genera un archivo HDF5 correspondiente en la carpeta data/dataframes.
+
+* [train_model.py](https://github.com/GuillermoRojoSantos/GestoLingo/blob/main/src/train_model.py): Script que sirve para crear, entrenar y guardar el modelo entrenado en la carpeta data/models.
 
 # Tecnologías utilizadas
+
+<img src="images/aws.png" width="100px" style="margin: 2px;">
+<img src="images/colab.png" width="100px" style="margin: 2px;">
+<img src="images/css.png" width="100px" style="margin: 2px;">
+<img src="images/git.png" width="100px" style="margin: 2px;">
+<img src="images/github.png" width="100px" style="margin: 2px;">
+<img src="images/html.png" width="100px" style="margin: 2px;">
+<img src="images/jupyter.png" width="100px" style="margin: 2px;">
+<img src="images/keras.png" width="100px" style="margin: 2px;">
+<img src="images/mediapipe.png" width="100px" style="margin: 2px;">
+<img src="images/miniconda.png" width="100px" style="margin: 2px;">
+<img src="images/opencv.png" width="100px" style="margin: 2px;">
+<img src="images/pycharm.png" width="100px" style="margin: 2px;">
+<img src="images/python.png" width="100px" style="margin: 2px;">
+<img src="images/streamlit.png" width="100px" style="margin: 2px;">
+<img src="images/tensorflow.png" width="100px" style="margin: 2px;">
+<img src="images/visual.png" width="100px" style="margin: 2px;">
+
+
+* **Open CV:** Biblioteca de visión por computadora.
+* **Python:** Lenguaje de programación de alto nivel.
+* **Streamlit:** Marco de creación de aplicaciones web interactivas con Python.
+* **Mediapipe:** Biblioteca para análisis de datos de medios (imágenes y videos).
+* **AWS:** Amazon Web Services, plataforma de servicios en la nube.
+* **Google Colab:** Entorno de cuadernos colaborativos basado en la nube.
+* **Jupyter:** Entorno interactivo para escribir y ejecutar código en cuadernos.
+* **Miniconda:** Distribución de Conda más ligera para gestión de paquetes.
+* **Tensorflow:** Biblioteca de código abierto para aprendizaje automático.
+* **Keras:** Interfaz de alto nivel para redes neuronales, integrada en TensorFlow.
+* **html:** Lenguaje de marcado para la creación de páginas web.
+* **CSS:** Lenguaje para el diseño y estilo de páginas web.
+* **Cx-Freeze:** Herramienta para crear ejecutables a partir de programas de Python.
+* **Lupas Rename:** Aplicación para renombrar muchos archivos.
+* **Github:** Plataforma de desarrollo colaborativo utilizando Git.
+* **Git:** Sistema de control de versiones distribuido.
+* **Visual Studio Code:** Editor de código fuente.
+* **Pycharm:** Entorno de desarrollo integrado (IDE) para Python.
+
+
 
 # Obtención de datos
 
