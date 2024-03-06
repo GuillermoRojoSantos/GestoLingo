@@ -8,7 +8,7 @@
 ---
 # Descripción y Justificación
 
-👋 ¡Hola!,¿Te gustatía aprender más sobre la Lengua de Signos Española? 👋
+👋 ¡Hola!,¿Te gustaría aprender más sobre la Lengua de Signos Española? 👋
 
 Entonces debes de conocer **GestoLingo**, la mejor APP para aprender esta lengua. 🤙
 
@@ -126,23 +126,24 @@ Se creará una aplicación web con Streamlit, la cual permanecerá en local debi
 
 # Tecnologías utilizadas
 
-<img src="images/aws.png" width="100px" style="margin: 2px;">
-<img src="images/colab.png" width="100px" style="margin: 2px;">
-<img src="images/css.png" width="100px" style="margin: 2px;">
-<img src="images/git.png" width="100px" style="margin: 2px;">
-<img src="images/github.png" width="100px" style="margin: 2px;">
-<img src="images/html.png" width="100px" style="margin: 2px;">
-<img src="images/jupyter.png" width="100px" style="margin: 2px;">
-<img src="images/keras.png" width="100px" style="margin: 2px;">
-<img src="images/mediapipe.png" width="100px" style="margin: 2px;">
-<img src="images/miniconda.png" width="100px" style="margin: 2px;">
-<img src="images/opencv.png" width="100px" style="margin: 2px;">
-<img src="images/pycharm.png" width="100px" style="margin: 2px;">
-<img src="images/python.png" width="100px" style="margin: 2px;">
-<img src="images/streamlit.png" width="100px" style="margin: 2px;">
-<img src="images/tensorflow.png" width="100px" style="margin: 2px;">
-<img src="images/visual.png" width="100px" style="margin: 2px;">
-
+<div>
+    <img src="images/aws.png" width="100px" style="margin: 2px;">
+    <img src="images/colab.png" width="100px" style="margin: 2px;">
+    <img src="images/css.png" width="100px" style="margin: 2px;">
+    <img src="images/git.png" width="100px" style="margin: 2px;">
+    <img src="images/github.png" width="100px" style="margin: 2px;">
+    <img src="images/html.png" width="100px" style="margin: 2px;">
+    <img src="images/jupyter.png" width="100px" style="margin: 2px;">
+    <img src="images/keras.png" width="100px" style="margin: 2px;">
+    <img src="images/mediapipe.png" width="100px" style="margin: 2px;">
+    <img src="images/miniconda.png" width="100px" style="margin: 2px;">
+    <img src="images/opencv.png" width="100px" style="margin: 2px;">
+    <img src="images/pycharm.png" width="100px" style="margin: 2px;">
+    <img src="images/python.png" width="100px" style="margin: 2px;">
+    <img src="images/streamlit.png" width="100px" style="margin: 2px;">
+    <img src="images/tensorflow.png" width="100px" style="margin: 2px;">
+    <img src="images/visual.png" width="100px" style="margin: 2px;">
+</div>
 
 * **Open CV:** Biblioteca de visión por computadora.
 * **Python:** Lenguaje de programación de alto nivel.
