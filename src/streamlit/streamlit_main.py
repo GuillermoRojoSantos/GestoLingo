@@ -330,5 +330,3 @@ with tab4:
                     st.error("Las credenciales no son correctas", icon="🚨")
     with col2:
         st.markdown(configLogo, unsafe_allow_html=True)
-
-
