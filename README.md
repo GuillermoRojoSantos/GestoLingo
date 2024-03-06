@@ -261,9 +261,130 @@ Tras sacar todas las tomas que necesites de esa Palabra, se ejecutará `process_
    
 # Exploración y visualización de los datos
 
+
 # Preparación de los datos
 
-# Entrenamiento del modelo y comprobación del rendimiento
+# Entrenamiento del modelo y comprobación del rendimiento -- `src/train_model.py`
+Se realizan las importaciones:
+```py
+import os
+import numpy as np
+import pandas as pd
+from tensorflow import keras
+from tensorflow.keras.utils import pad_sequences, to_categorical
+from tensorflow.keras import layers, callbacks
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+```
+Se establece cuantas palabras hay, la cantidad máxima de frames por sample y se crean dos listas vacias una para almacenar los keypoints y otra para almacenar las etiquetas, respectivamente 
+```py
+words = [x for x in os.listdir("../data/treatedDF")]
+max_frames = 30
+word_keypoints = []  # Keypoint sequence for each sample
+word_nums = []  # Words represented by numbers
+```
+
+Se empeiza a procesar los datos, por cada Dataframe, se itera sobre el número de muestras y sus etiquetas, mediante la función `pad_sequences` de Keras
+```py
+for num, word in enumerate(words):
+    df = pd.read_hdf(f"../data/treatedDF/{word}")
+    for num_sample in df.n_sample.unique():
+        word_keypoints.append([data["keypoints"] for _, data in df[df.n_sample == num_sample].iterrows()])
+        word_nums.append(num)
+```
+
+Se rellena y truncan las secuencias de keypoints de una longitud de max frames. 
+
+Separación de datos en conjuntos de entrenamiento y prueba. Y preparación de etiquetas, donde las etiquetas de las palabras pasan a ser vectores one-hot mediante el uso del método ‘to_categorical’.
+
+```py
+word_keypoints = pad_sequences(word_keypoints, maxlen=30, padding="post", truncating="post", dtype='float32')
+
+X_train, X_test, y_train, y_test = train_test_split(word_keypoints, word_nums, test_size=0.30)
+X_train = np.array(X_train)
+y_train = to_categorical(y_train, num_classes=4, dtype="int")
+X_test = np.array(X_test)
+y_test = to_categorical(y_test, num_classes=4, dtype="int")
+
+```
+
+Se define un callback que será el encargado de detener el entrenamiento del modelo si no hay mejoras en la pérdida durante un número específico de epochs
+```py
+early_stoping = callbacks.EarlyStopping(min_delta=0.001,
+                                        patience=5,
+                                        restore_best_weights=True,
+                                        monitor="loss")
+```
+
+Definimos el modelo, mediante `keras.Sequential`
+Se agregan capas LSTM con diferentes configuraciones. 
+También se agregan capas de Batch Normalización, Dense(las cuales están completamente conectadas) y Dropout para regularizar el modelo y evitar el sobreajuste.
+La compilación del modelo es mediante el optimizador Adam, la función de pérdida de ‘categorical_crossentropy’ y la métrica de ‘accuracy’
+
+```py
+model = keras.Sequential(
+    [layers.LSTM(64, return_sequences=True, activation="tanh", input_shape=(30, 126)),
+     layers.LSTM(128, return_sequences=True, activation="tanh"),
+     layers.LSTM(128, return_sequences=False, activation="tanh"),
+     layers.BatchNormalization(),
+     layers.Dense(70, activation="sigmoid"),
+     layers.Dropout(0.2),
+     layers.Dense(70, activation="relu"),
+     layers.Dense(70, activation="relu"),
+     layers.Dropout(0.2),
+     layers.Dense(70, activation="relu"),
+     layers.Dense(70, activation="relu"),
+     layers.Dropout(0.2),
+     layers.Dense(64, activation="relu"),
+     layers.Dense(64, activation="relu"),
+     layers.BatchNormalization(),
+     layers.Dropout(0.2),
+     layers.Dense(32, activation="sigmoid"),
+     layers.Dense(32, activation="relu"),
+     layers.Dense(4, activation="softmax")]
+)
+model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+
+```
+
+El entrenamiento del modelo se realiza mediante el uso del método ‘fit’ de Keras.
+Se le proporcionan los datos de entrenamiento, X_train e y_train, y los datos de validación, X_test e y_test. Se establece un número de epochs en 100 y se le proporciona el callback establecido antes.
+
+```py
+history = model.fit(X_train,
+                    y_train,
+                    epochs=100,
+                    validation_data=(X_test, y_test),
+                    callbacks=[early_stoping])
+```
+
+Se creará un Dataframe donde se almacenará todo sobre el entrenamiento del modelo, su pérdida y la validación de cada epoch
+```py
+history_df = pd.DataFrame(history.history)
+```
+
+Se visualiza esos valores de perdida, validación mediante Matplotlib, a lo largo del entrenamiento.
+
+```py
+history_df.loc[:, ['loss', 'val_loss']].plot()
+plt.show()
+```
+
+Se muestra por pantalla un resumen del modelo
+
+```py
+print(model.summary())
+```
+
+Antes de guardar el modelo entrenado, se comprueba que la ruta exista, de no hacerlo, se crea.
+Después, se guarda el modelo
+
+```py
+if not os.path.exists("../data/model/"):
+    os.mkdir("../data/model/")
+
+model.save("../data/model/GestoLingo.keras")
+```
 
 # Procesamiento de Lenguaje Natural
 
