@@ -8,15 +8,23 @@
 [data-testid="stText_input"] {
     width: 75%;
 }
-.stVideo [data-baseweb=video]{
+.stVideo [data-baseweb=video] {
     width: 25%;
 }
 
-[data-testid="stTabs"], [data-testid="StyledLinkIconContainer"] {
+[data-baseweb="tab-list"] {
+    justify-content: center;
+}
+
+.st-c2 [data-baseweb="tab-list"] {
+    background: #275dc0;
+} 
+
+/* [data-testid="stTabs"], [data-testid="StyledLinkIconContainer"] {
     text-align: center;
     align-items: center;
     display: flow-root;
-}
+} */
 
 [data-testid="stAppViewBlockContainer"] {
     padding: 0 !important;
@@ -39,6 +47,13 @@ div.st-emotion-cache-eqffof>p{
 .element-container,st-emotion-cache-1lupliv,e1f1d6gn4{
     display: flex;
     justify-content: center;
+}
+
+[data-testid="stAppViewContainer"] > .main {
+    background-image: url("https://www.bunionsurgeon.co.uk/_next/image?url=%2Fimages%2Fabstract-lines.png&w=3840&q=75");
+    background-size: 100vw 100vh;
+    background-position: center;  
+    background-repeat: no-repeat;
 }
 
 body {
@@ -67,15 +82,12 @@ header {
     width: 100%;
 }
 
-#logo-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
+
 .logo-image {
-    width: 90px;
-    height: 90px;
-    margin: -10px;
+    display: flex;
+    float: left;
+    height: 32px;
+    margin-right: 15px; 
 }
 
 
@@ -111,10 +123,11 @@ header {
 }
 
 #app-name {
-    margin-top: 10px;
-    font-size: 36px; 
+    font-size: 20px; 
     font-family: 'Verdana', sans-serif; 
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    margin-left: 15px;
 }
 
 main {
