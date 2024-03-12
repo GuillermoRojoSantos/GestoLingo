@@ -26,6 +26,10 @@
     display: flow-root;
 } */
 
+[data-testid="stImage"] {
+    margin-top: 15px;
+}
+
 [data-testid="stAppViewBlockContainer"] {
     padding: 0 !important;
 }
@@ -34,10 +38,34 @@
     justify-content: center;
 }
 
+[data-testid="stButton"] {
+    text-align: center;
+}
+
+[data-testid="baseButton-secondary"]{
+    background-color: lightgrey;
+    width: 300px;
+    text-align: center;
+}
+
+.st-emotion-cache-10trblm, e1nzilvr1 {
+    color: #275dc0;
+}
+
+[data-testid="baseButton-secondary"]:hover {
+    background-color: grey;
+    color: white !important;
+}
+
+/* row-widget stButton */
 .st-emotion-cache-eqffof, e1nzilvr5 {
     display: flex;
     justify-content: center;
     flex-direction: row !important;
+}
+
+.st-emotion-cache-183lzff, exotz4b0 {
+    text-align: center;
 }
 
 div.st-emotion-cache-eqffof>p{
