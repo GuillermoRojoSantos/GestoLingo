@@ -1,13 +1,14 @@
+import cv2
 import streamlit as st
+import mediapipe as mp
 import base64
 import boto3
 import pandas as pd
-import numpy as np
 from io import StringIO
 from io import BytesIO
-import mediapipe as mp
-import cv2
 from tensorflow import keras
+import numpy as np
+import os
 
 
 # Configuración de la página
@@ -26,6 +27,94 @@ with open("./images/logo1.png", "rb") as f:
     contents = f.read()
     data_url = base64.b64encode(contents).decode("utf-8")
 
+# Imagen Inicio
+with open("./images/SBG-TEC.png", "rb") as f:
+    contents2 = f.read()
+    data_url2 = base64.b64encode(contents2).decode("utf-8")
+
+# Logo AWS
+with open("./images/aws.png", "rb") as f:
+    contents3 = f.read()
+    data_url3 = base64.b64encode(contents3).decode("utf-8")
+
+# Robot
+with open("./images/buenas.gif", "rb") as f:
+    contents4 = f.read()
+    data_url4 = base64.b64encode(contents4).decode("utf-8")
+
+
+# Código HTML
+
+# Código para el header
+header = f'''
+    <header>
+        <div id="logo-container">
+            <img class = "logo-image" src="data:image/png;base64,{data_url}" alt="Logo">
+        </div>
+        <div id="app-name">Gestolingo</div>
+    </header>
+'''
+
+# Código para el body de la pestaña índice
+body = f'''
+<div class= "index-div">
+    <div class="text-block">
+        <h2>La IA que da voz al silencio</h2>
+        <p>Imaginen un mundo donde la barrera del lenguaje no sea un obstáculo, donde la comunicación sea fluida para todos, independientemente de su habilidad auditiva. Esto es exactamente lo que la nueva IA, desarrollada por los alumnos del Máster de IA & Big Data quieren lograr.</p>
+        <h2>Cómo funciona</h2>
+        <p>Esta innovadora IA utiliza avanzados algoritmos de visión en tiempo real para interpretar los gestos y signos realizados por personas que se comunican a través del lenguaje de signos. Esta IA puede traducir estos gestos en tiempo real.</p>
+        <ul>
+            <li> En la pestaña <b>Aprender</b> de nuestra Web podrás empezar con un diccionario de vídeos explicativos a aprender tus primeras palabras con el Lenguaje de Signos. </li>
+            <li> En el apartado <b>Practicar</b> puedes poner a prueba tus habilidades sobre lo aprendido gracias al sistema de IA implementado en tiempo Real. Recuerda tener tu cámara lista y, ¡A gesticular se ha dicho!. </li>
+            <li> Inicie sesión en <b>Configuración</b> con su cuenta de AWS para poder empezar a aprender </li>
+        </ul>
+    </div>
+    <div class="image-block">
+        <img class = "img-index" src="data:image/png;base64,{data_url2}" alt="Logo">
+    </div>
+</div>
+'''
+
+# Código para el logo de AWS
+configLogo = f'''
+        <div class="logo-aws">
+            <img style = "width:50% " src="data:image/png;base64,{data_url3}" alt="Logo">
+        </div>
+        <h3>Configuración del servidor AWS</h3>
+        <li> ¡Disponible para cuentas corporativas! </li>
+        <li> Accede a nuestra base de datos aportando las credenciales de AWS </li>
+        <li> No olvides confirmar los datos antes de abandonar esta pestaña </li>
+'''
+
+# Código para el bocadillo
+bocadillo = f'''
+<div class="centrado">
+    <div>
+        <div class="bocadillo-redondo">
+            <section class="texto-bocadillo">  
+                <p class="texto-animado"> Vaya a <b>"Configuración"</b> </p>
+            </section>
+        </div>
+        <img class="robotin" src="data:image/png;base64,{data_url4}" alt="Robotin">
+    </div>
+</div>
+'''
+
+# Código para el footer
+footer = f'''
+    <br>
+    <br>
+    <br>
+    <footer>
+        &copy; 2024 Gestolingo - Traductor de Lenguaje de Signos
+    </footer>
+'''
+
+# Mostrar el header en todas las pestañas y cargar la hoja de estilos (CSS)
+
+with open('./style.css') as css:
+    st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html = True)
+st.markdown(header, unsafe_allow_html=True)
 
 state = st.session_state
 
@@ -38,137 +127,17 @@ if 'aws_token' not in st.session_state:
 if 'open_key' not in st.session_state:
     state["open_key"] = False
 
-# Código para el header
-header = f'''
-<header>
-    <div id="logo-container">
-        <img class = "logo-image" src="data:image/png;base64,{data_url}" alt="Logo">
-    </div>
-    <div id="app-name">Gestolingo</div>
-</header>
-'''
-
-entra = f'''
-<p>👋 ¡Hola!,¿Te gustaría aprender más sobre la Lengua de Signos Española? 👋</p>
-<p>Entonces debes de conocer <b>GestoLingo</b>, la mejor APP para aprender esta lengua. 🤙</p>
-'''
-
-body = f'''
-<div>
-    <h3>Pero, ¿qué es GestoLingo? 🤔</h3>
-    <p><b>GestoLingo</b> es una herramienta de interpretación y traducción en tiempo real del <b>LSE</b> (Lengua de
-            Signos Española) que usa <i>CV</i> (Computer Vision) y <i>NLP</i> (Natural Language Processing) para identificar,
-            interpretar y transformar palabras simples del LSE en palabras equivalentes en español.</p>
-    <p>
-        El principal propósito de esta herramienta es ayudar a gente con impedimentos del habla a aprender a
-        comunicarse
-        mediante el uso del Lenguaje de Signos en Español. ☝
-    </p>
-    <h3>¿Cómo ha sido logrado? 🧐</h3>
-    <p>Gracial al grupo de estudiantes del <b>Máster de Inteligencia Artificial y Big Data</b>, logrando conseguir
-        crear un modelo con Inteligencia Artificial capaz de realizar esta difícil tarea 🦾🤖</p>
-    <br>
-    <h2>Realizado por:</h2>
-    <p style="display: flex;flex-direction: column;align-items: center;">Guillermo Rojo Santos | José Antonio Díaz | Gabriel Postigo Rando</p>
-</div>
-'''
-
-sin_con= f'''
-<div class="sin_con">
-    <h1>Bienvenido a la pestaña 'Aprender'</h1>
-    <div>
-        <p>
-            Para poder acceder a esta pestaña es necesario que inicie sesión en
-        </p>
-        <p style="margin-top: -10px;">
-            la pestaña 'Configuración' con una cuenta de AWS.
-        </p>
-    </div>
-    <div>
-        <p>
-            Si no sabes cómo iniciar sesión con tu cuenta, pulsa el botón
-        </p>
-        <p style="margin-top: -10px;">
-            que pone 'Información'
-        </p>
-    </div>
-</div>
-'''
-
-tablas_info= f'''
-<div class="tablas">
-    <div class="uni">
-        <h2>Configuración</h2>
-        <p>En primer lugar, en la pestaña configuración, deberás de elegir el tipo de cuenta de AWS que utilizarás,
-            distinguiendo entre cuenta personal y cuenta de estudiante.</p>
-    </div>
-    <div>
-        <h2>Cuenta personal</h2>
-        <ol>
-            <li>Accede a tu cuenta de AWS</li>
-            <li>Click sobre tu perfil > " Mis credenciales de Seguridad"</li>
-            <li>Dirigete al apartado "Claves de acceso"</li>
-        </ol>
-    </div>
-    <div>
-        <h2>Cuenta Estudiante</h2>
-        <ol>
-            <li>Inicia tu laboratorio en la página "Vocareum"</li>
-            <li>Pulsa sobre el apartado "AWS Details"</li>
-            <li>En AWS CLI pulsa en "Show"</li>
-        </ol>
-    </div>
-</div>
-'''
-
-logo = '''
-<img src="./images/logo_tfm.jpeg" style="max-width: 20%; border-radius: 10%;">
-'''
-
-titulo = '''
-<div>
-    <h2>Gestolingo</h2>
-    <br>
-    <h4>'La IA que da voz al silencio'</h4>
-</div>
-'''
-
-status = True # simula haberse conectado o no al AWS
-
-with open('./style.css') as css:
-    st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html = True)
-st.markdown(header, unsafe_allow_html=True)
-
 tab1, tab2, tab3, tab4 = st.tabs(["Inicio", "Aprender", "Practicar","Configuración"])
 
+# Pestaña Inicio
+
+st.markdown(footer, unsafe_allow_html=True)
 with tab1:
-    st.write('')
-    col0,col21, col22,col23,col24,col5 = st.columns(6)
-    with col0:
-       st.text('')
-    with col21:
-       st.text('')
-    with col22:
-        st.image('./images/logo_tfm.jpeg', width=200)
-    with col23:
-        st.markdown(titulo, unsafe_allow_html=True)
-    with col24:
-       st.text('')
-    with col5:
-       st.text('')
+  st.markdown(body, unsafe_allow_html=True)
 
-    col31,col32,col33 = st.columns(3)
 
-    with col31:
-       st.text('')
-    with col32:
-       st.markdown(body, unsafe_allow_html=True)
-    with col33:
-       st.text('')
+# Pestaña Aprender
 
-    st.text('')
-    st.text('')
-     
 with tab2:
     if state["open_key"]:
         # Configurar la conexión a S3
@@ -177,18 +146,22 @@ with tab2:
                               aws_session_token=state["aws_token"])
         else:
             s3 = boto3.client('s3', aws_access_key_id=state["aws_id"], aws_secret_access_key=state["aws_key"])
-        
-        col1, col2,col3 = st.columns(3)
-        col11,col12,col13 = st.columns(3)
+        busqueda = st.text_input("Buscar la palabra que quieras aprender:")
+        col1, col2,col3,col4,col5 = st.columns(5)
+
         with col1:
-            st.text('')
-        
+            st.text("")
+
         with col2:
-            st.header('¿Qué palabra te gustaria aprender?')
-            busqueda = st.text_input("Buscar la palabra que quieras aprender:")
+            st.header("La palabra elegida es:")
+            st.subheader(busqueda)
+        with col3:
+                st.text("")
+        with col4:
+
             bucket_name = 'gestolingo'
+            video_key = f'{busqueda}.mov'
             if busqueda:
-                video_key = f'{busqueda}.mov'
             # Obtener el objeto desde S3
                 try:
                     response = s3.head_object(Bucket=bucket_name, Key=video_key)
@@ -209,58 +182,38 @@ with tab2:
                         st.header(f"Error al verificar la existencia del objeto: {e}")
                 except Exception as e:
                     st.header(f"Se ha perdido la conexión")
-        with col3:
-            st.text('')
 
-        with col11:
-            st.text('')
-        with col12:
+        with col5:
             st.text("")
-            mostrar = st.button("Mostrar Diccionario")
-
-            
-        with col13:
-            st.text('')
-        
+        mostrar = st.button("Mostrar Diccionario")
         if mostrar:
-                # Descargar el archivo CSV desde S3
-                response = s3.get_object(Bucket=bucket_name, Key='palabras_encontradas.csv')
-                content = response['Body'].read().decode('utf-8')
+            # Descargar el archivo CSV desde S3
+            response = s3.get_object(Bucket=bucket_name, Key='palabras_encontradas.csv')
+            content = response['Body'].read().decode('utf-8')
 
-                # Crear el DataFrame a partir del contenido del archivo
-                palabras = pd.read_csv(StringIO(content))
-                # Dividir la columna 'Palabras' en 16 columnas
-                num_columnas = 16
-                columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
-                                                columns=[f'Columna_{i+1}' for i in range(num_columnas)])
-                st.title('Palabras Disponibles')
-                st.dataframe(columnas_divididas)
-
+            # Crear el DataFrame a partir del contenido del archivo
+            palabras = pd.read_csv(StringIO(content))
+            # Dividir la columna 'Palabras' en 16 columnas
+            num_columnas = 16
+            columnas_divididas = pd.DataFrame(palabras['Palabras'].to_numpy().reshape(-1, num_columnas),
+                                            columns=[f'Columna_{i+1}' for i in range(num_columnas)])
+            st.title('Palabras Disponibles')
+            st.dataframe(columnas_divididas)
     else:
-        st.markdown(sin_con, unsafe_allow_html=True)
+        st.markdown(bocadillo, unsafe_allow_html=True)
 
-        if st.button('Información'):
-            st.markdown(tablas_info, unsafe_allow_html=True)
-        else:
-            st.image('./images/roboto.png', width=200)
-
-# Pestaña practicar
+# Pestaña Practicar
 
 with tab3:
-  col1, col2,col3 = st.columns(3)
-  with col1:
-    st.text("")
-  with col2:
-    st.title("Practica lo aprendido")
-    bot1, bot2 = st.columns(2)
-    with bot1:
-      empezar = st.button("Empezar")
-    with bot2:
-      terminar = st.button("Parar")
-    if empezar:
+    abrir = st.button("Comenzar")
+    if abrir:
+
+        st.title("Webcam Live Feed")
+
         cap = cv2.VideoCapture(0)
 
         frame_placeholder = st.empty()
+        stop_button_pressed = st.button("stop")
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
         model:keras.Sequential = keras.models.load_model("./models/GestoLingo.keras")
@@ -323,26 +276,22 @@ with tab3:
                         keypoints=[]
                         print("keypoints",len(keypoints))
                 frame_placeholder.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), channels="RGB")
-                if terminar:
+                if stop_button_pressed:
                     break
-  
-  with col3:
-    st.text("")
+
 # Pestaña Configuración
 
 with tab4:
-  col1, col2,col3 = st.columns(3)
 
-  with col1:
-      st.text("")
-  with col2:
-        st.image("images/awsLogo.png", width=150)
-        estudiante = st.toggle("Estudiante")
+    col1, col2 = st.columns(2)
+    with col1:
+        aws_token = ""
+        estudiante = st.toggle("Cuenta de estudiante")
         aws_id = st.text_input("Introduce el aws_access_key_id: ")
         aws_key =st.text_input("Introduce el aws_secret_access_key: ")
         if estudiante:
             aws_token =st.text_input("Introduce el aws_session_token: ")
-            st.markdown("<br>",unsafe_allow_html=True)
+
         guardar = st.button("Guardar")
         if guardar:
                 try:
@@ -379,5 +328,5 @@ with tab4:
                             st.error("Error de Conexión", icon="🚨")
                 except:
                     st.error("Las credenciales no son correctas", icon="🚨")
-  with col3:
-      st.text("")
+    with col2:
+        st.markdown(configLogo, unsafe_allow_html=True)
