@@ -298,3 +298,59 @@ footer {
         border-color: transparent;
     }
 }
+
+
+/*
+-- CSS para la 2º pestaña, 'Aprender'
+*/
+.sin_con {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sin_con div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.roboto{
+    width: 200px;
+    position: fixed;
+    bottom: 0;
+    left: 50%; 
+    transform: translateX(-50%); 
+    z-index: 999; 
+    margin-bottom: 10%;
+}
+
+[data-testid="stButton"] {
+    text-align: center;
+}
+
+[data-testid="baseButton-secondary"]{
+    background-color: lightgrey;
+    width: 300px;
+    text-align: center;
+}
+
+.tablas {
+    margin: auto;
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    height: calc(100% - 294px);
+}
+
+.tablas > div {
+    border: 1px solid black; 
+    border-radius: 5px; 
+    width: 80%; 
+    padding: 10px; /* Espaciado interno */
+    margin: 0 30px; /* Espaciado externo */
+}
+
+.uni{
+    width: 20%;
+}
