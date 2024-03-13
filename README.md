@@ -25,7 +25,7 @@ Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big D
 ---
 # Enlaces de descarga
 
-[Descargar GestoLingo para Windows 10/11](https://www.swisstransfer.com/d/c5d29505-ff13-4b65-a4ae-432588e4b058)
+[Descargar GestoLingo para Windows 10/11](https://www.swisstransfer.com/d/99cd166b-4733-4aa4-a779-c7f852896742)
 
 [Descargar GestoLingo para Linux]() (en proceso)
 
@@ -35,7 +35,7 @@ Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big D
 
 # Video de Presentación GestoLingo
 
-[Presentación GestoLingo](https://www.youtube.com/watch?v=tqYoQTBiwp4)
+[Presentación GestoLingo](https://youtu.be/DvzhN0Cw5Mc?si=css8lmMHUj1d7a0F)
 
 # Presentación
 
