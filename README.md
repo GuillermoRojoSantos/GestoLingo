@@ -31,6 +31,9 @@ Gracial al grupo de estudiantes del **Máster de Inteligencia Artificial y Big D
 
 [Descargar GestoLingo para MacOS]() (en proceso)
 
+<br><br>
+Si algún enlace de descarga no funciona, por favor enviad un correo especificando el SO en el que se desea ejecutar GestoLingo a wthereddev@gmail.com
+
 ---
 
 # Video de Presentación GestoLingo
